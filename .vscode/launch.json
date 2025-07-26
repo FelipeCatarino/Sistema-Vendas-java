@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Fechamento",
+      "request": "launch",
+      "mainClass": "com.sistemaMaster.gui.Fechamento",
+      "projectName": "meu-sistema"
+    },
+    {
+      "type": "java",
+      "name": "Principal",
+      "request": "launch",
+      "mainClass": "com.sistemaMaster.Principal",
+      "projectName": "meu-sistema"
+    },
+    {
+      "type": "java",
+      "name": "Principal",
+      "request": "launch",
+      "mainClass": "Principal",
+      "projectName": "meu-sistema"
+    },
+    {
+      "type": "java",
+      "name": "Sistema de Vendas - Iniciar",
+      "request": "launch",
+      "mainClass": "com.sistema-master.Principal",
+      "projectName": "sistema-master"
+    }
+  ]
+}
