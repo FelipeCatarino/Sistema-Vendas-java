@@ -33,35 +33,35 @@ public class ControleEstoque {
 
 
 public List<Object[]> buscarProdutos(String busca) {
-        List<Object[]> produtos = new ArrayList<>();
+    List<Object[]> produtos = new ArrayList<>();
 
-        String sql = "SELECT * FROM tbproduto WHERE Nome LIKE ? OR Codigo_Produto LIKE ?";
+    String sql = "SELECT * FROM tbproduto WHERE Nome LIKE ? OR CodigoProduto LIKE ?";
+    
+    try (Connection conn = new Conexao().getConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbsistemavenda", "root", "");
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, "%" + busca + "%");
+        stmt.setString(2, "%" + busca + "%");
 
-            stmt.setString(1, "%" + busca + "%");
-            stmt.setString(2, "%" + busca + "%");
+        ResultSet rs = stmt.executeQuery();
 
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                produtos.add(new Object[]{
-                    rs.getInt("Codigo"),
-                    rs.getString("Nome"),
-                    rs.getDouble("PrecoCompra"),
-                    rs.getDouble("PrecoVenda"),
-                    rs.getInt("QuantidadeEstoque"),
-                    rs.getString("Codigo_Produto")
-                });
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            produtos.add(new Object[]{
+                rs.getInt("Codigo"),
+                rs.getString("Nome"),
+                rs.getDouble("PrecoCompra"),
+                rs.getDouble("PrecoVenda"),
+                rs.getInt("QuantidadeEstoque"),
+                rs.getString("CodigoProduto")
+            });
         }
 
-        return produtos;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return produtos;
+}
 }
 
 
