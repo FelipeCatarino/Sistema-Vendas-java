@@ -26,7 +26,7 @@ public class ClienteDAO implements IDAO<Cliente> {
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -44,7 +44,7 @@ public class ClienteDAO implements IDAO<Cliente> {
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -59,7 +59,7 @@ public class ClienteDAO implements IDAO<Cliente> {
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -83,7 +83,7 @@ public class ClienteDAO implements IDAO<Cliente> {
             }
             return listaClientes;
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -94,7 +94,7 @@ public class ClienteDAO implements IDAO<Cliente> {
             c = new Conexao();
             return recuperar(c, codigo);
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 

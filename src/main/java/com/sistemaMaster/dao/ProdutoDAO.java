@@ -17,17 +17,25 @@ public class ProdutoDAO implements IDAO<Produto> {
         Conexao c = null;
         try {
             c = new Conexao(); // sempre inicia uma nova conexão
-            String sql = "INSERT INTO TBPRODUTO (NOME, PRECOCOMPRA, PRECOVENDA, QUANTIDADEESTOQUE, CODIGOPRODUTO) VALUES (?, ?, ?, 0, ?)";
-            PreparedStatement ps = c.getConexao().prepareStatement(sql);
+            String sql = "INSERT INTO TBPRODUTO (NOME, PRECOCOMPRA, PRECOVENDA, QUANTIDADEESTOQUE, CODIGOPRODUTO, CODIGOFORNECEDOR, QUANTIDADEESTOQUE, QUANTIDADEMINIMAESTOQUE) VALUES (?, ?, ?, 0, ?, ?, ?, ?)";
+            PreparedStatement ps = c.getConexao().prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, produto.getNome());
             ps.setDouble(2, produto.getPrecoCompra());
             ps.setDouble(3, produto.getPrecoVenda());
             ps.setString(4, produto.getCodigo_produto());
+            ps.setInt(5, produto.getFornecedor().getCodigo());
+            ps.setInt(6, produto.getQuantidade());
+            ps.setInt(7, produto.getQuantidadeMinima());
             ps.execute();
+            // Atualiza o campo 'codigo' do produto com o valor gerado pelo banco
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                produto.setCodigo(rs.getInt(1));
+            }
             c.confirmar();
         } finally {
             if (c != null) {
-                c.fechar(); // garante que a conexão será fechada
+                c.close();
             }
         }
     }
@@ -44,7 +52,7 @@ public class ProdutoDAO implements IDAO<Produto> {
         ps.setInt(5, produto.getCodigo());
         ps.execute();
         c.confirmar();
-        c.fechar();
+        c.close();
     }
 
     public void entradaEstoque(Conexao c, int codigo, int quantidade) throws Exception {
@@ -71,7 +79,7 @@ public class ProdutoDAO implements IDAO<Produto> {
         ps.setInt(1, produto.getCodigo());
         ps.execute();
         c.confirmar();
-        c.fechar();
+        c.close();
     }
 
     @Override
@@ -92,7 +100,7 @@ public class ProdutoDAO implements IDAO<Produto> {
             produto.setCodigo_produto(rs.getString("CODIGOPRODUTO"));
             listaProdutos.add(produto);
         }
-        c.fechar(); // <-- Fecha a conexão só depois do loop!
+        c.close(); // <-- Fecha a conexão só depois do loop!
         return listaProdutos;
     }
 
@@ -103,7 +111,7 @@ public class ProdutoDAO implements IDAO<Produto> {
             c = new Conexao();
             return recuperar(c, codigo);
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 

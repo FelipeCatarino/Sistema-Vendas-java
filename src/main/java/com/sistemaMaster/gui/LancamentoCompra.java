@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
  *
  * @author Juliano
  */
+
 public class LancamentoCompra extends javax.swing.JInternalFrame {
 
     private Compra compra = null;
@@ -201,11 +202,11 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         pnForm.add(ftfFornecedor, gridBagConstraints);
 
-        btFornecedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/buscar.png"))); // NOI18N
+        btFornecedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/buscar.png")));
         btFornecedor.setToolTipText("Localizar cliente");
         btFornecedor.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btFornecedor.setPreferredSize(new java.awt.Dimension(21, 21));
-        btFornecedor.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/buscar-foco.png"))); // NOI18N
+        btFornecedor.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/buscar-foco.png")));
         btFornecedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btFornecedorActionPerformed(evt);
@@ -386,7 +387,7 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
         buscaProduto.setVisible(true);
     }
 
-    private void btAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarItemActionPerformed
+    private void btAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {
         if (validarFormularioItens()) {
             ItemCompra iv = new ItemCompra();
             iv.setProduto((Produto) ftfProduto.getValue());
@@ -403,9 +404,9 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
 
             limpaFormularioItens();
         }
-    }//GEN-LAST:event_btAdicionarItemActionPerformed
+    }
 
-    private void btRemoverItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverItemActionPerformed
+    private void btRemoverItemActionPerformed(java.awt.event.ActionEvent evt) {
         if (tbGradeItens.getSelectedRowCount() > 0) {
             int linhaSelecionada = tbGradeItens.getSelectedRow();
             ItemCompraTableModel ivtm = (ItemCompraTableModel) tbGradeItens.getModel();
@@ -418,9 +419,9 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Selecione uma linha para remover.", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btRemoverItemActionPerformed
+    }
 
-    private void tbGradeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbGradeMouseClicked
+    private void tbGradeMouseClicked(java.awt.event.MouseEvent evt) {
         if (evt.getClickCount() == 2) {
             int linhaSelecionada = tbGrade.getSelectedRow();
             CompraTableModel vtm = (CompraTableModel) tbGrade.getModel();
@@ -444,16 +445,16 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
 
             habilitarFormulario(true);
         }
-    }//GEN-LAST:event_tbGradeMouseClicked
+    }
 
-    private void btFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinalizarActionPerformed
+    private void btFinalizarActionPerformed(java.awt.event.ActionEvent evt) {
         int opcao = JOptionPane.showConfirmDialog(this, "Deseja realmente finalizar a compra?");
         if (opcao == 0) {
             salvar(true);
         }
-    }//GEN-LAST:event_btFinalizarActionPerformed
+    }
 
-    private void btExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirActionPerformed
+    private void btExcluirActionPerformed(java.awt.event.ActionEvent evt) {
         int opcao = JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar a compra " + compra + "?");
         if (opcao == 0) {
             try {
@@ -466,7 +467,7 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
             habilitarFormulario(false);
             carregarGrade();
         }
-    }//GEN-LAST:event_btExcluirActionPerformed
+    }
 
     public void setFornecedor(Fornecedor cliente) {
         ftfFornecedor.setValue(cliente);
@@ -581,7 +582,7 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
         }
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+   
     private javax.swing.JToolBar barraFerramentas;
     private javax.swing.JButton btAdicionarItem;
     private javax.swing.JButton btCancelar;
@@ -615,6 +616,6 @@ public class LancamentoCompra extends javax.swing.JInternalFrame {
     private javax.swing.JTable tbGrade;
     private javax.swing.JTable tbGradeItens;
     private javax.swing.JTabbedPane tpConteudo;
-    // End of variables declaration//GEN-END:variables
+  
 
 }

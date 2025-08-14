@@ -24,7 +24,7 @@ public class FornecedorDAO implements IDAO<Fornecedor> {
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -41,7 +41,7 @@ public class FornecedorDAO implements IDAO<Fornecedor> {
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -56,7 +56,7 @@ public class FornecedorDAO implements IDAO<Fornecedor> {
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -79,7 +79,7 @@ public class FornecedorDAO implements IDAO<Fornecedor> {
             }
             return listaFornecedors;
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -101,7 +101,7 @@ public class FornecedorDAO implements IDAO<Fornecedor> {
             }
             return fornecedor;
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 }

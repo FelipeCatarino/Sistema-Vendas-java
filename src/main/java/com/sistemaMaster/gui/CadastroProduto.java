@@ -1,24 +1,37 @@
 package com.sistemaMaster.gui;
 
+import com.sistemaMaster.dao.CompraDAO;
 import com.sistemaMaster.dao.ProdutoDAO;
 import com.sistemaMaster.gui.tm.ProdutoTableModel;
+import com.sistemaMaster.to.Compra;
+import com.sistemaMaster.to.Fornecedor;
+import com.sistemaMaster.to.ItemCompra;
 import com.sistemaMaster.to.Produto;
+import com.sistemaMaster.to.enums.Situacao;
+
 import javax.swing.JOptionPane;
 import javax.swing.text.NumberFormatter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 
 /**
  * Janela de cadastro de produto
  *
- * @author Juliano
+ * @author Juliano / Felipe
  */
+
 public class CadastroProduto extends javax.swing.JInternalFrame {
+
+    
 
     private Produto produto = null;
     private ProdutoDAO produtoDAO = new ProdutoDAO();
 
+    private Compra compra = null;
+    private ItemCompra itemCompra = null;
     public CadastroProduto() {
+
         initComponents();
         habilitarFormulario(false);
         carregarGrade();
@@ -33,15 +46,22 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         btSalvar = new javax.swing.JButton();
         btExcluir = new javax.swing.JButton();
         btCancelar = new javax.swing.JButton();
+        btFornecedor = new javax.swing.JButton();
         pnConteudo = new javax.swing.JPanel();
         pnForm = new javax.swing.JPanel();
         lbNome = new javax.swing.JLabel();
+        lblQuantidadeMinima = new javax.swing.JLabel();
         lbPrecoCompra = new javax.swing.JLabel();
         lbPrecoVenda = new javax.swing.JLabel();
         lbCodigoProduto = new javax.swing.JLabel();
+        lblFornecedor = new javax.swing.JLabel();
+        lblQuantidade = new javax.swing.JLabel();
         ftfNome = new javax.swing.JFormattedTextField();
         ftfNome.setColumns(25);
         ftfNome.setPreferredSize(new java.awt.Dimension(200, 25)); // tamanho preferencial
+        ftfQuantidadeMinima = new javax.swing.JSpinner();
+        ftfQuantidade = new javax.swing.JSpinner();
+        ftfFornecedor = new javax.swing.JFormattedTextField();
 
         NumberFormat format = new DecimalFormat("#0.00");
         NumberFormatter formatter = new NumberFormatter(format);
@@ -53,18 +73,18 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         tfCodigoProduto = new javax.swing.JTextField(15);
         tfCodigoProduto.setEditable(false);
         tfCodigoProduto.setPreferredSize(new java.awt.Dimension(200, 25)); // tamanho preferencial maior
-        tfCodigoProduto.setMinimumSize(new java.awt.Dimension(200, 25));   // tamanho mínimo
+        tfCodigoProduto.setMinimumSize(new java.awt.Dimension(200, 25)); // tamanho mínimo
 
         ftfPrecoCompra = new javax.swing.JFormattedTextField(formatter);
         ftfPrecoCompra.setColumns(10);
         ftfPrecoCompra.setValue(new Double(0));
         ftfPrecoCompra.setPreferredSize(new java.awt.Dimension(200, 25)); // tamanho preferencial maior
-        ftfPrecoCompra.setMinimumSize(new java.awt.Dimension(200, 25));   // tamanho mínimo
+        ftfPrecoCompra.setMinimumSize(new java.awt.Dimension(200, 25)); // tamanho mínimo
         ftfPrecoVenda = new javax.swing.JFormattedTextField(formatter);
         ftfPrecoVenda.setColumns(10);
         ftfPrecoVenda.setValue(new Double(0));
         ftfPrecoVenda.setPreferredSize(new java.awt.Dimension(200, 25)); // tamanho preferencial maior
-        ftfPrecoVenda.setMinimumSize(new java.awt.Dimension(200, 25));   // tamanho mínimo
+        ftfPrecoVenda.setMinimumSize(new java.awt.Dimension(200, 25)); // tamanho mínimo
 
         spGrade = new javax.swing.JScrollPane();
         tbGrade = new javax.swing.JTable();
@@ -85,7 +105,8 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         btNovo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btNovo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btNovo.setMargin(new java.awt.Insets(2, 8, 2, 8));
-        btNovo.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/novo-foco.png"))); // NOI18N
+        btNovo.setRolloverIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/novo-foco.png"))); // NOI18N
         btNovo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -126,7 +147,8 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         });
         barraFerramentas.add(btExcluir);
 
-        btCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/cancelar.png"))); // NOI18N
+        btCancelar
+                .setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/cancelar.png"))); // NOI18N
         btCancelar.setText("Cancelar");
         btCancelar.setFocusable(false);
         btCancelar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -198,6 +220,78 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         pnForm.add(tfCodigoProduto, gridBagConstraints);
 
+        lblQuantidade.setText("Quantidade:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        pnForm.add(lblQuantidade, gridBagConstraints);
+
+        ftfQuantidade.setMinimumSize(new java.awt.Dimension(200, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(ftfQuantidade, gridBagConstraints);
+
+        lblQuantidadeMinima.setText("Estoque Mínimo:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        pnForm.add(lblQuantidadeMinima, gridBagConstraints);
+
+        ftfQuantidadeMinima.setMinimumSize(new java.awt.Dimension(200, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(ftfQuantidadeMinima, gridBagConstraints);
+
+        lblFornecedor.setText("Fornecedor:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        pnForm.add(lblFornecedor, gridBagConstraints);
+
+        ftfFornecedor.setEditable(false);
+        ftfFornecedor.setMinimumSize(new java.awt.Dimension(150, 25));
+        ftfFornecedor.setColumns(25);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        pnForm.add(ftfFornecedor, gridBagConstraints);
+
+
+        btFornecedor
+                .setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/buscar.png")));
+        btFornecedor.setToolTipText("Localizar Fornecedor");
+        btFornecedor.setBorderPainted(false);
+        btFornecedor.setMargin(new java.awt.Insets(0, 0, 0, 0)); // Margem zero
+        btFornecedor.setContentAreaFilled(false);
+        btFornecedor.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btFornecedor.setMinimumSize(new java.awt.Dimension(25, 25));
+        btFornecedor.setRolloverIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/buscar-foco.png")));
+        btFornecedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFornecedorActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        pnForm.add(btFornecedor, gridBagConstraints);
+
         ftfNome.setColumns(25);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -247,6 +341,7 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
 
     private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {
         produto = new Produto();
+        compra = new Compra();
         tfCodigoProduto.setText("");
         habilitarFormulario(true);
         btExcluir.setEnabled(false);
@@ -260,6 +355,10 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
             produto.setPrecoCompra(precoCompra);
             produto.setPrecoVenda(precoVenda);
             produto.setCodigo_produto(tfCodigoProduto.getText());
+            produto.setFornecedor((Fornecedor) ftfFornecedor.getValue());
+
+            produto.setQuantidade((Integer) ftfQuantidade.getValue());
+            produto.setquantidadeMinima((Integer) ftfQuantidadeMinima.getValue()); 
 
             if (produto.getCodigo() == 0) {
                 try {
@@ -278,6 +377,26 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
                     return;
                 }
             }
+
+            if ((Integer) ftfQuantidade.getValue() > 0) {
+                compra.setFornecedor(produto.getFornecedor());
+                compra.setDataCompra(new Date());
+                compra.setSituacao(Situacao.FINALIZADA);
+                ItemCompra iv = new ItemCompra();
+                iv.setProduto(produto); // Use the 'produto' object directly
+                iv.setCompra(compra);
+                iv.setQuantidade((int) ftfQuantidade.getValue());
+                iv.setValorUnitario(produto.getPrecoCompra()); 
+                
+            compra.addItem(iv);
+            CompraDAO compraDAO = new CompraDAO();
+            try {
+                compraDAO.inserir(compra);
+            } catch (Exception e) {
+                System.out.println("Erro ao salvar estoque: " + e.getMessage());
+                e.printStackTrace();
+            } // Save the purchase with the item
+            } 
 
             habilitarFormulario(false);
             carregarGrade();
@@ -304,6 +423,11 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         habilitarFormulario(false);
     }
 
+    private void btFornecedorActionPerformed(java.awt.event.ActionEvent evt) {
+        BuscaFornecedor buscaFornecedor = new BuscaFornecedor(this);
+        buscaFornecedor.setVisible(true);
+    }
+
     private void tbGradeMouseClicked(java.awt.event.MouseEvent evt) {
         if (evt.getClickCount() == 2) {
             ProdutoTableModel tm = (ProdutoTableModel) tbGrade.getModel();
@@ -327,6 +451,9 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         ftfPrecoVenda.setEnabled(ativo);
         tbGrade.setEnabled(!ativo);
         tfCodigoProduto.setEditable(ativo);
+        ftfQuantidadeMinima.setEnabled(ativo);
+        ftfQuantidade.setEnabled(ativo);
+        ftfFornecedor.setEnabled(ativo);
 
         if (!ativo) {
             limpaFormulario();
@@ -379,6 +506,10 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         }
     }
 
+    public void setFornecedor(Fornecedor cliente) {
+        ftfFornecedor.setValue(cliente);
+    }
+
     private double parseDouble(String value) {
         try {
             value = value.replace(",", ".").replaceAll("[^0-9.]", "");
@@ -388,24 +519,31 @@ public class CadastroProduto extends javax.swing.JInternalFrame {
         }
     }
 
-
     private javax.swing.JToolBar barraFerramentas;
     private javax.swing.JButton btCancelar;
     private javax.swing.JButton btExcluir;
     private javax.swing.JButton btNovo;
     private javax.swing.JButton btSalvar;
+    private javax.swing.JButton btFornecedor;
     private javax.swing.JFormattedTextField ftfNome;
     private javax.swing.JFormattedTextField ftfPrecoCompra;
     private javax.swing.JFormattedTextField ftfPrecoVenda;
+    private javax.swing.JFormattedTextField ftfFornecedor;
+    
     private javax.swing.JTextField tfCodigoProduto;
     private javax.swing.JLabel lbNome;
     private javax.swing.JLabel lbPrecoCompra;
     private javax.swing.JLabel lbPrecoVenda;
     private javax.swing.JLabel lbCodigoProduto;
+    private javax.swing.JLabel lblQuantidadeMinima;
+    private javax.swing.JLabel lblFornecedor;
+    private javax.swing.JLabel lblQuantidade;
     private javax.swing.JPanel pnBarraFerramentas;
     private javax.swing.JPanel pnConteudo;
     private javax.swing.JPanel pnForm;
     private javax.swing.JScrollPane spGrade;
     private javax.swing.JTable tbGrade;
-    
+    private javax.swing.JSpinner ftfQuantidadeMinima;
+    private javax.swing.JSpinner ftfQuantidade;
+
 }

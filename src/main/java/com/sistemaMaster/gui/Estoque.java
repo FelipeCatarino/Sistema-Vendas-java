@@ -20,12 +20,15 @@ import java.util.List;
 
 public class Estoque extends JInternalFrame {
 
+    private JDesktopPane desktop;
+
     private JTable tabela;
     private JTextField txtBusca;
     private DefaultTableModel modelo;
 
-    public Estoque() {
+    public Estoque(JDesktopPane desktop) {
         super("Controle de Estoque", true, true, true, true);
+        this.desktop = desktop;
         setSize(850, 500);
         setLayout(new BorderLayout());
 
@@ -50,6 +53,81 @@ public class Estoque extends JInternalFrame {
         painelBusca.add(txtBusca, BorderLayout.CENTER);
         painelBusca.add(btnBuscar, BorderLayout.EAST);
 
+        JPanel painelBotoes = new JPanel();
+        painelTopo.add(painelBotoes, BorderLayout.SOUTH);
+        JButton btnAdicionar = new JButton("Adicionar Produto");
+        btnAdicionar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnAdicionar.setBackground(new Color(46, 204, 113));
+        btnAdicionar.setForeground(Color.WHITE);
+        btnAdicionar.addActionListener(e -> {
+            CadastroProduto telaCadastro = new CadastroProduto();
+            desktop.add(telaCadastro); // adiciona no JDesktopPane principal
+            telaCadastro.setVisible(true);
+        });
+        painelBotoes.add(btnAdicionar);
+
+        JButton btnRemover = new JButton("Remover Produto");
+        btnRemover.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnRemover.setBackground(new Color(231, 76, 60));
+        btnRemover.setForeground(Color.WHITE);
+        btnRemover.addActionListener(e -> {
+            int linhaSelecionada = tabela.getSelectedRow();
+            
+            if (linhaSelecionada == -1) {
+                JOptionPane.showMessageDialog(this, "Selecione um produto para remover.");
+                return;
+            }
+
+            int codigo = (int) modelo.getValueAt(linhaSelecionada, 0);
+            String nome = (String) modelo.getValueAt(linhaSelecionada, 1);
+            System.out.println("Removendo produto: " + nome + " (Código: " + codigo + ")");
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja realmente excluir o produto \"" + nome + "\"?",
+                    "Confirmação",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                ControleEstoque controle = new ControleEstoque();
+                controle.excluirProduto(codigo);
+                carregarProdutos(); // recarrega a tabela
+            }
+        });
+        painelBotoes.add(btnRemover);
+
+        JButton btnEditar = new JButton("Editar Produto");
+        btnEditar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnEditar.setBackground(new Color(241, 196, 15));
+        btnEditar.setForeground(Color.WHITE);
+        btnEditar.addActionListener(e -> {
+            // Ação para editar produto
+            JOptionPane.showMessageDialog(this, "Funcionalidade de edição de produto ainda não implementada.");
+        });
+        painelBotoes.add(btnEditar);
+
+        JButton btnCompra = new JButton("Registrar Compra");
+        btnCompra.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnCompra.setBackground(new Color(155, 89, 182));
+        btnCompra.setForeground(Color.WHITE);
+        btnCompra.addActionListener(e -> {
+            LancamentoCompra telaCompra = new LancamentoCompra();
+            desktop.add(telaCompra); // adiciona no JDesktopPane principal
+            telaCompra.setVisible(true);
+
+        });
+        painelBotoes.add(btnCompra);
+
+        JButton btAtualizar = new JButton("🔄");
+        btAtualizar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btAtualizar.setBackground(new Color(155, 89, 182));
+        btAtualizar.setForeground(Color.WHITE);
+        btAtualizar.addActionListener(e -> {
+            carregarProdutos(); // recarrega a tabela
+            JOptionPane.showMessageDialog(this, "Tabela atualizada com sucesso!");
+
+        });
+        painelBotoes.add(btAtualizar);
+
         painelTopo.add(painelBusca, BorderLayout.CENTER);
         add(painelTopo, BorderLayout.NORTH);
 
@@ -58,7 +136,7 @@ public class Estoque extends JInternalFrame {
         modelo = new DefaultTableModel(colunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // impede edição direta na tabela
+                return false;
             }
         };
 
@@ -113,20 +191,20 @@ public class Estoque extends JInternalFrame {
         }
     }
 
-private void buscarProduto() {
-    String busca = txtBusca.getText().trim();
-    modelo.setRowCount(0);
+    private void buscarProduto() {
+        String busca = txtBusca.getText().trim();
+        modelo.setRowCount(0);
 
-    ControleEstoque controle = new ControleEstoque();
-    List<Object[]> produtos = controle.buscarProdutos(busca);
+        ControleEstoque controle = new ControleEstoque();
+        List<Object[]> produtos = controle.buscarProdutos(busca);
 
-    for (Object[] linha : produtos) {
-        modelo.addRow(linha);
+        for (Object[] linha : produtos) {
+            modelo.addRow(linha);
+        }
+
+        if (produtos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhum produto encontrado.");
+        }
     }
-
-    if (produtos.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Nenhum produto encontrado.");
-    }
-}
 
 }

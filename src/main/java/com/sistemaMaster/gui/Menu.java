@@ -1,6 +1,7 @@
 package com.sistemaMaster.gui;
 
 import com.sistemaMaster.gui.DesktopPaneComImagem;
+import com.sistemaMaster.gui.controller.MenuController;
 
 /**
  * Janela menu da aplicação
@@ -9,17 +10,19 @@ import com.sistemaMaster.gui.DesktopPaneComImagem;
  */
 public class Menu extends javax.swing.JFrame {
 
+    private MenuController controller;
+
     public Menu() {
         initComponents();
+        controller = new MenuController(desktopPane, this);
     }
 
     private void initComponents() {
 
+        
         toolBar = new javax.swing.JToolBar();
         btVenda = new javax.swing.JButton();
         btOrdemServico = new javax.swing.JButton();
-        btCompra = new javax.swing.JButton();
-        btProduto = new javax.swing.JButton();
         btEstoque = new javax.swing.JButton();
         btCliente = new javax.swing.JButton();
         btDashboard = new javax.swing.JButton();
@@ -61,7 +64,7 @@ public class Menu extends javax.swing.JFrame {
         btVenda.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miVendaActionPerformed(evt);
+                controller.miVendaActionPerformed(evt);
             }
         });
         toolBar.add(btVenda);
@@ -77,45 +80,14 @@ public class Menu extends javax.swing.JFrame {
         btOrdemServico.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btOrdemServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OrdemServico ordemServico = new OrdemServico();
-                desktopPane.add(ordemServico);
-                ordemServico.setVisible(true);
+                controller.btOrdemServicoActionPerformed(evt);
             }
         });
         toolBar.add(btOrdemServico);
 
-        btCompra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/compra.png"))); // NOI18N
-        btCompra.setText("Compra");
-        btCompra.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btCompra.setFocusable(false);
-        btCompra.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btCompra.setMargin(new java.awt.Insets(2, 12, 2, 12));
-        btCompra.setRolloverIcon(
-                new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/compra-foco.png"))); // NOI18N
-        btCompra.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        btCompra.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btCompra.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miCompraActionPerformed(evt);
-            }
-        });
-        toolBar.add(btCompra);
 
-        btProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/produto.png"))); // NOI18N
-        btProduto.setText("Produto");
-        btProduto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btProduto.setFocusable(false);
-        btProduto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btProduto.setMargin(new java.awt.Insets(2, 12, 2, 12));
-        btProduto.setRolloverIcon(
-                new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/produto-foco.png"))); // NOI18N
-        btProduto.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btProduto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miProdutoActionPerformed(evt);
-            }
-        });
-        toolBar.add(btProduto);
+
+
 
         btEstoque.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/estoque.png"))); // NOI18N
         btEstoque.setText("Estoque");
@@ -128,9 +100,7 @@ public class Menu extends javax.swing.JFrame {
         btEstoque.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Estoque estoque = new Estoque();
-                desktopPane.add(estoque);
-                estoque.setVisible(true);
+                controller.btEstoqueActionPerformed(evt);
             }
         });
         toolBar.add(btEstoque);
@@ -146,7 +116,7 @@ public class Menu extends javax.swing.JFrame {
         btCliente.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miClienteActionPerformed(evt);
+                controller.miClienteActionPerformed(evt);
             }
         });
         toolBar.add(btCliente);
@@ -162,7 +132,7 @@ public class Menu extends javax.swing.JFrame {
         btFornecedor.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btFornecedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miFornecedorActionPerformed(evt);
+                controller.miFornecedorActionPerformed(evt);
             }
         });
         toolBar.add(btFornecedor);
@@ -179,9 +149,7 @@ public class Menu extends javax.swing.JFrame {
 
         btDashboard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Dashboard dashboard = new Dashboard();
-                desktopPane.add(dashboard);
-                dashboard.setVisible(true);
+                controller.btDashboardActionPerformed(evt);
             }
         });
         toolBar.add(btDashboard);
@@ -198,9 +166,7 @@ public class Menu extends javax.swing.JFrame {
 
         btFiado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CadernoFiado cadernoFiado = new CadernoFiado();
-                desktopPane.add(cadernoFiado);
-                cadernoFiado.setVisible(true);
+                controller.btFiadoActionPerformed(evt);
             }
         });
         toolBar.add(btFiado);
@@ -216,8 +182,7 @@ public class Menu extends javax.swing.JFrame {
         btFechamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btFechamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Fechamento fechamento = new Fechamento();
-                fechamento.mostrarFechamento();
+                controller.btFechamentoActionPerformed(evt);
             }
         });
         toolBar.add(btFechamento);
@@ -232,7 +197,7 @@ public class Menu extends javax.swing.JFrame {
         btSair.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miSairActionPerformed(evt);
+                controller.miSairActionPerformed(evt);
             }
         });
         toolBar.add(btSair);
@@ -248,7 +213,7 @@ public class Menu extends javax.swing.JFrame {
         miProduto.setText("Cadastrar Produto");
         miProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miProdutoActionPerformed(evt);
+                controller.miProdutoActionPerformed(evt);
             }
         });
         menuCadastros.add(miProduto);
@@ -257,7 +222,7 @@ public class Menu extends javax.swing.JFrame {
         miCliente.setText("Cadastrar Cliente");
         miCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miClienteActionPerformed(evt);
+                controller.miClienteActionPerformed(evt);
             }
         });
         menuCadastros.add(miCliente);
@@ -266,7 +231,7 @@ public class Menu extends javax.swing.JFrame {
         miFornecedor.setText("Cadastrar Fornecedor");
         miFornecedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miFornecedorActionPerformed(evt);
+                controller.miFornecedorActionPerformed(evt);
             }
         });
         menuCadastros.add(miFornecedor);
@@ -279,7 +244,7 @@ public class Menu extends javax.swing.JFrame {
         miVenda.setText("Registrar Venda");
         miVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miVendaActionPerformed(evt);
+                controller.miVendaActionPerformed(evt);
             }
         });
         menuMovimentos.add(miVenda);
@@ -288,7 +253,7 @@ public class Menu extends javax.swing.JFrame {
         miCompra.setText("Registrar Compra");
         miCompra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miCompraActionPerformed(evt);
+                controller.miCompraActionPerformed(evt);
             }
         });
         menuMovimentos.add(miCompra);
@@ -301,7 +266,7 @@ public class Menu extends javax.swing.JFrame {
         miSobre.setText("Sobre");
         miSobre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miSobreActionPerformed(evt);
+                controller.miSobreActionPerformed(evt);
             }
         });
         menuSistema.add(miSobre);
@@ -311,7 +276,7 @@ public class Menu extends javax.swing.JFrame {
         miSair.setText("Sair");
         miSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miSairActionPerformed(evt);
+                controller.miSairActionPerformed(evt);
             }
         });
         menuSistema.add(miSair);
@@ -324,59 +289,20 @@ public class Menu extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void miProdutoActionPerformed(java.awt.event.ActionEvent evt) {
-        CadastroProduto c = new CadastroProduto();
-        desktopPane.add(c);
-        c.setVisible(true);
-    }
-
-    private void miClienteActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miClienteActionPerformed
-        CadastroCliente c = new CadastroCliente();
-        desktopPane.add(c);
-        c.setVisible(true);
-    }
-
-    private void miFornecedorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miFornecedorActionPerformed
-        CadastroFornecedor c = new CadastroFornecedor();
-        desktopPane.add(c);
-        c.setVisible(true);
-    }
-
-    private void miVendaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miVendaActionPerformed
-        LancamentoVenda v = new LancamentoVenda();
-        desktopPane.add(v);
-        v.setVisible(true);
-    }
-
-    private void miCompraActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miCompraActionPerformed
-        LancamentoCompra c = new LancamentoCompra();
-        desktopPane.add(c);
-        c.setVisible(true);
-    }// GEN-LAST:event_miCompraActionPerformed
-
-    private void miSobreActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miSobreActionPerformed
-        Sobre s = new Sobre(this, true);
-        s.setVisible(true);
-    }// GEN-LAST:event_miSobreActionPerformed
-
-    private void miSairActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_miSairActionPerformed
-        System.exit(0);
-    }// GEN-LAST:event_miSairActionPerformed
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btCliente;
-    private javax.swing.JButton btCompra;
-    private javax.swing.JButton btOrdemServico;
-    private javax.swing.JButton btFornecedor;
-    private javax.swing.JButton btDashboard;
     private javax.swing.JButton btBusca;
-    private javax.swing.JButton btFiado;
-    private javax.swing.JButton btProduto;
+    private javax.swing.JToolBar toolBar;
+    private javax.swing.JButton btCliente;
+
+    private javax.swing.JButton btDashboard;
     private javax.swing.JButton btEstoque;
+    private javax.swing.JButton btFechamento;
+    private javax.swing.JButton btFiado;
+    private javax.swing.JButton btFornecedor;
+    private javax.swing.JButton btOrdemServico;
+
     private javax.swing.JButton btSair;
-    private javax.swing.JButton btFechamento;;
     private javax.swing.JButton btVenda;
-    private com.sistemaMaster.gui.DesktopPaneComImagem desktopPane;
+    private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuCadastros;
     private javax.swing.JMenu menuMovimentos;
@@ -388,6 +314,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem miSair;
     private javax.swing.JMenuItem miSobre;
     private javax.swing.JMenuItem miVenda;
-    private javax.swing.JToolBar toolBar;
-    // End of variables declaration//GEN-END:variables
 }
+
+

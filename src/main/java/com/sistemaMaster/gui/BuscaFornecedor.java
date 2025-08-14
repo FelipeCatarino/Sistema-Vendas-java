@@ -34,7 +34,7 @@ public class BuscaFornecedor extends javax.swing.JDialog {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+
     private void initComponents() {
 
         pnFiltro = new javax.swing.JPanel();
@@ -73,35 +73,34 @@ public class BuscaFornecedor extends javax.swing.JDialog {
         getContentPane().add(spGrade, java.awt.BorderLayout.CENTER);
 
         setSize(new java.awt.Dimension(500, 350));
-        setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+        setLocationRelativeTo(null);}
 
-    private void tbGradeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbGradeMouseClicked
+
+    private void tbGradeMouseClicked(java.awt.event.MouseEvent evt) {
         if (evt.getClickCount() == 2) {
             FornecedorTableModel ctm = (FornecedorTableModel) tbGrade.getModel();
             int linhaSelecionada = tbGrade.getRowSorter().convertRowIndexToModel(tbGrade.getSelectedRow());
             Fornecedor fornecedor = ctm.getRowValue(linhaSelecionada);
 
-            if (parent instanceof LancamentoCompra) {
-                LancamentoCompra lc = (LancamentoCompra) parent;
-                lc.setFornecedor(fornecedor);
+            if (parent instanceof CadastroProduto) {
+                CadastroProduto cp = (CadastroProduto) parent;
+                cp.setFornecedor(fornecedor);
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Campo de destino inválido.", "Alerta", JOptionPane.WARNING_MESSAGE);
             }
 
         }
-    }//GEN-LAST:event_tbGradeMouseClicked
+    }
 
     private void tfFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfFiltroKeyReleased
         TableRowSorter rs = (TableRowSorter) tbGrade.getRowSorter();
         rs.setRowFilter(RowFilter.regexFilter("(?i)" + tfFiltro.getText(), 0, 1));
-    }//GEN-LAST:event_tfFiltroKeyReleased
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    }
     private javax.swing.JLabel lbFiltro;
     private javax.swing.JPanel pnFiltro;
     private javax.swing.JScrollPane spGrade;
     private javax.swing.JTable tbGrade;
     private javax.swing.JTextField tfFiltro;
-    // End of variables declaration//GEN-END:variables
+
 }

@@ -16,8 +16,9 @@ public class Venda {
     private int codigo;
     private Cliente cliente;
     private Date dataVenda;
-    private Double valorTotal;
+    private Double valorTotalProduto;
     private Double MaoDeObra;
+    private Double valorTotalVenda;
     private Situacao situacao;
     private FormaPagamento formaPagamento;
     private List<ItemVenda> itens;
@@ -27,8 +28,9 @@ public class Venda {
         this.codigo = 0;
         this.cliente = new Cliente();
         this.dataVenda = new Date();
-        this.valorTotal = 0.0;
+        this.valorTotalProduto = 0.0;
         this.MaoDeObra = 0.0;
+        this.valorTotalVenda = 0.0;
         this.itens = new ArrayList<>();
         this.itensRemover = new ArrayList<>();
     }
@@ -37,7 +39,7 @@ public class Venda {
         this.codigo = codigo;
         this.cliente = new Cliente();
         this.dataVenda = new Date();
-        this.valorTotal = 0.0;
+        this.valorTotalProduto = 0.0;
         this.MaoDeObra = 0.0;
         this.itens = new ArrayList<>();
         this.itensRemover = new ArrayList<>();
@@ -50,6 +52,14 @@ public class Venda {
 
     public void setMaoDeObra(Double maoDeObra) {
         MaoDeObra = maoDeObra;
+    }
+
+    public Double getValorTotalVenda() {
+        return valorTotalVenda != null ? valorTotalVenda : calcularValorTotalVenda();
+    }
+
+    public void setValorTotalVenda(Double valorTotalVenda) {
+        this.valorTotalVenda = valorTotalVenda;
     }
 
     public int getCodigo() {
@@ -146,16 +156,16 @@ public class Venda {
         return itens.size();
     }
 
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
+    public void setValorTotalProduto(Double valorTotalProduto) {
+        this.valorTotalProduto = valorTotalProduto;
     }
 
-    public double calcularValorTotal() {
+    public Double calcularValorTotalVenda() {
         double total = 0;
         for (ItemVenda item : itens) {
             total += item.getValorUnitario() * item.getQuantidade();
         }
-        return total;
+        return total + MaoDeObra;
     }
 
 

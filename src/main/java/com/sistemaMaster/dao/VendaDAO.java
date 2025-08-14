@@ -21,7 +21,7 @@ public class VendaDAO implements IDAO<Venda> {
         Conexao c = null;
         try {
             c = new Conexao();
-            String sql = "INSERT INTO TBVENDA (CODIGOCLIENTE, DATAVENDA, VALORTOTAL, SITUACAO, FORMA_PAGAMENTO, MaoDeObra) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO TBVENDA (CODIGOCLIENTE, DATAVENDA, VALORTOTALPRODUTO, SITUACAO, FORMA_PAGAMENTO, MaoDeObra, ValorTotalVenda) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = c.getConexao().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, venda.getCliente().getCodigo());
             ps.setDate(2, new Date(venda.getDataVenda().getTime()));
@@ -29,6 +29,7 @@ public class VendaDAO implements IDAO<Venda> {
             ps.setInt(4, venda.getSituacao().getId());
             ps.setInt(5, venda.getFormaPagamento().getId());
             ps.setDouble(6, venda.getMaoDeObra());
+            ps.setDouble(7, venda.getValorTotalVenda());
             ps.execute();
 
             ResultSet rs = ps.getGeneratedKeys();
@@ -51,7 +52,7 @@ public class VendaDAO implements IDAO<Venda> {
             }
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -60,11 +61,11 @@ public class VendaDAO implements IDAO<Venda> {
         Conexao c = null;
         try {
             c = new Conexao();
-            String sql = "UPDATE TBVENDA SET CODIGOCLIENTE=?, DATAVENDA=?, VALORTOTAL=?, SITUACAO=? WHERE CODIGO=?";
+            String sql = "UPDATE TBVENDA SET CODIGOCLIENTE=?, DATAVENDA=?, VALORTOTALVENDA=?, SITUACAO=? WHERE CODIGO=?";
             PreparedStatement ps = c.getConexao().prepareStatement(sql);
             ps.setInt(1, venda.getCliente().getCodigo());
             ps.setDate(2, new Date(venda.getDataVenda().getTime()));
-            ps.setDouble(3, venda.getValorTotal());
+            ps.setDouble(3, venda.getValorTotalVenda());
             ps.setInt(4, venda.getSituacao().getId());
             ps.setInt(5, venda.getCodigo());
             ps.execute();
@@ -104,7 +105,7 @@ public class VendaDAO implements IDAO<Venda> {
 
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -113,17 +114,17 @@ public class VendaDAO implements IDAO<Venda> {
         Conexao c = null;
         try {
             c = new Conexao();
-            String sql = "UPDATE TBVENDA SET CODIGOCLIENTE=?, DATAVENDA=?, VALORTOTAL=?, SITUACAO=? WHERE CODIGO=?";
+            String sql = "UPDATE TBVENDA SET CODIGOCLIENTE=?, DATAVENDA=?, VALORTOTALVENDA=?, SITUACAO=? WHERE CODIGO=?";
             PreparedStatement ps = c.getConexao().prepareStatement(sql);
             ps.setInt(1, venda.getCliente().getCodigo());
             ps.setDate(2, new Date(venda.getDataVenda().getTime()));
-            ps.setDouble(3, venda.getValorTotal());
+            ps.setDouble(3, venda.getValorTotalVenda());
             ps.setInt(4, Situacao.CANCELADA.getId());
             ps.setInt(5, venda.getCodigo());
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -146,6 +147,8 @@ public class VendaDAO implements IDAO<Venda> {
                 venda.setCliente(clienteDAO.recuperar(c, rs.getInt("CODIGOCLIENTE")));
                 venda.setDataVenda(rs.getDate("DATAVENDA"));
                 venda.setSituacao(rs.getInt("SITUACAO"));
+                venda.setValorTotalVenda(rs.getDouble("VALORTOTALVENDA"));
+                venda.setMaoDeObra(rs.getDouble("MAODEOBRA"));
 
                 String sqlItem = "SELECT * FROM TBITEMVENDA WHERE CODIGOVENDA=?";
                 PreparedStatement psItem = c.getConexao().prepareStatement(sqlItem);
@@ -167,7 +170,7 @@ public class VendaDAO implements IDAO<Venda> {
 
             return listaVendas;
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -190,6 +193,8 @@ public class VendaDAO implements IDAO<Venda> {
                 venda.setCliente(clienteDAO.recuperar(c, rs.getInt("CODIGOCLIENTE")));
                 venda.setDataVenda(rs.getDate("DATAVENDA"));
                 venda.setSituacao(rs.getInt("SITUACAO"));
+                venda.setValorTotalVenda(rs.getDouble("VALORTOTALVENDA"));
+                venda.setMaoDeObra(rs.getDouble("MAODEOBRA"));
 
                 String sqlItem = "SELECT * FROM TBITEMVENDA WHERE CODIGOVENDA=?";
                 PreparedStatement psItem = c.getConexao().prepareStatement(sqlItem);
@@ -209,7 +214,7 @@ public class VendaDAO implements IDAO<Venda> {
 
             return venda;
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 }

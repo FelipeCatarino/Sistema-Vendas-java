@@ -40,7 +40,7 @@ public class VendaTableModel extends AbstractTableModel {
             case 1:
                 return SDF.format(venda.getDataVenda());
             case 2:
-                return NFC.format(venda.getValorTotal());
+                return NFC.format(venda.getValorTotalVenda());
             case 3:
                 return venda.getSituacao();
             default:

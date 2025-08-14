@@ -31,7 +31,6 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
         habilitarFormulario(false);
         carregarGrade();
 
-        
     }
 
     private void initComponents() {
@@ -237,6 +236,8 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
         });
         pnForm.add(btCliente, new java.awt.GridBagConstraints());
 
+        
+
         ftfValorTotal.setEditable(false);
         ftfValorTotal.setMinimumSize(new java.awt.Dimension(150, 25));
         ftfValorTotal.setColumns(10);
@@ -249,6 +250,28 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         pnForm.add(ftfValorTotal, gridBagConstraints);
+
+                JLabel lbFormaPagamento = new JLabel("Pagamento:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(lbFormaPagamento, gridBagConstraints);
+
+        opcaoPagamento = new JComboBox<>();
+        opcaoPagamento.addItem(new FormaPagamento(1, "Dinheiro"));
+        opcaoPagamento.addItem(new FormaPagamento(2, "Pix"));
+        opcaoPagamento.addItem(new FormaPagamento(3, "Cartão de Crédito"));
+        opcaoPagamento.addItem(new FormaPagamento(4, "Cartão de Débito"));
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        pnForm.add(opcaoPagamento, gridBagConstraints);
 
         ftfDataVenda.setEditable(false);
         ftfDataVenda.setMinimumSize(new java.awt.Dimension(150, 25));
@@ -285,7 +308,7 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
                         javax.swing.BorderFactory.createTitledBorder(null, "Formulário",
                                 javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
                                 javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11),
-                                new java.awt.Color(102, 153, 255)))); // NOI18N
+                                new java.awt.Color(102, 153, 255))));
         pnFormItens.setOpaque(false);
         pnFormItens.setLayout(new java.awt.GridBagLayout());
 
@@ -354,27 +377,6 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         pnFormItens.add(spQuantidade, gridBagConstraints);
 
-        JLabel lbFormaPagamento = new JLabel("Pagamento:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        pnFormItens.add(lbFormaPagamento, gridBagConstraints);
-
-        opcaoPagamento = new JComboBox<>();
-        opcaoPagamento.addItem(new FormaPagamento(1, "Dinheiro"));
-        opcaoPagamento.addItem(new FormaPagamento(2, "Pix"));
-        opcaoPagamento.addItem(new FormaPagamento(3, "Cartão de Crédito"));
-        opcaoPagamento.addItem(new FormaPagamento(4, "Cartão de Débito"));
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
-        pnFormItens.add(opcaoPagamento, gridBagConstraints);
 
         JLabel lbMaoDeObra = new JLabel("Mao de obra:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -427,8 +429,7 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5
-        ;
+        gridBagConstraints.gridy = 5;
         pnFormItens.add(btRemoverItem, gridBagConstraints);
 
         pnItens.add(pnFormItens, java.awt.BorderLayout.PAGE_START);
@@ -491,6 +492,7 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
         if (validarFormularioItens()) {
             ItemVenda iv = new ItemVenda();
             iv.setProduto((Produto) ftfProduto.getValue());
+
             iv.setVenda(venda);
             iv.setQuantidade((int) spQuantidade.getValue());
             iv.setValorUnitario((Double) ftfValorUnitario.getValue());
@@ -500,11 +502,12 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
             ItemVendaTableModel ivtm = (ItemVendaTableModel) tbGradeItens.getModel();
             ivtm.setDados(venda.getItens());
 
-            ftfValorTotal.setValue(venda.getValorTotal() + venda.getMaoDeObra());
+            // Atualiza o valor total (produtos + mão de obra)
+            double valorTotal = venda.getValorTotal() + ((Number) ftMaoDeObra.getValue()).doubleValue();
 
+            ftfValorTotal.setValue(valorTotal);     
             // Atualize o valor do rodapé sempre que o valor total mudar
-            ftfRodapeValorTotal.setValue(venda != null ? (venda.getValorTotal() + venda.getMaoDeObra()) : 0.0);
-
+            ftfRodapeValorTotal.setValue(valorTotal);
             limpaFormularioItens();
         }
     }

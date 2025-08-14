@@ -27,7 +27,7 @@ public class Compra {
         this.valorTotal = 0.0;
         this.itens = new ArrayList<>();
         this.itensRemover = new ArrayList<>();
-    }
+    }       
 
     public Compra(int codigo) {
         this.codigo = codigo;

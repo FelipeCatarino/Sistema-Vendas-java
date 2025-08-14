@@ -81,16 +81,16 @@ public class Dashboard extends JInternalFrame {
       String dataAno = hoje.withDayOfYear(1).format(DateTimeFormatter.ISO_DATE);
 
       // Vendas do dia
-      double vendasDia = consultaValor(conn, "SELECT IFNULL(SUM(ValorTotal),0) FROM tbvenda WHERE DataVenda = ?",
+      double vendasDia = consultaValor(conn, "SELECT IFNULL(SUM(ValorTotalVenda),0) FROM tbvenda WHERE DataVenda = ?",
           dataHoje);
       // Vendas do mês
       double vendasMes = consultaValor(conn,
-          "SELECT IFNULL(SUM(ValorTotal),0) FROM tbvenda WHERE DataVenda >= ? AND DataVenda <= ?", dataMes, dataHoje);
+          "SELECT IFNULL(SUM(ValorTotalVenda),0) FROM tbvenda WHERE DataVenda >= ? AND DataVenda <= ?", dataMes, dataHoje);
       // Vendas do ano
       double vendasAno = consultaValor(conn,
-          "SELECT IFNULL(SUM(ValorTotal),0) FROM tbvenda WHERE DataVenda >= ? AND DataVenda <= ?", dataAno, dataHoje);
+          "SELECT IFNULL(SUM(ValorTotalVenda),0) FROM tbvenda WHERE DataVenda >= ? AND DataVenda <= ?", dataAno, dataHoje);
       // Total vendido
-      double totalVendido = consultaValor(conn, "SELECT IFNULL(SUM(ValorTotal),0) FROM tbvenda", (String[]) null);
+      double totalVendido = consultaValor(conn, "SELECT IFNULL(SUM(ValorTotalVenda),0) FROM tbvenda", (String[]) null);
 
       // Clientes
       int clientes = consultaInteiro(conn, "SELECT COUNT(*) FROM tbcliente");
@@ -156,7 +156,7 @@ public class Dashboard extends JInternalFrame {
       for (int i = 6; i >= 0; i--) {
         LocalDate data = hoje.minusDays(i);
         String dataStr = data.format(DateTimeFormatter.ISO_DATE);
-        double valor = consultaValor(conn, "SELECT IFNULL(SUM(ValorTotal),0) FROM tbvenda WHERE DataVenda = ?",
+        double valor = consultaValor(conn, "SELECT IFNULL(SUM(ValorTotalVenda),0) FROM tbvenda WHERE DataVenda = ?",
             dataStr);
         dataset.addValue(valor, "Vendas", data.format(DateTimeFormatter.ofPattern("dd/MM")));
       }

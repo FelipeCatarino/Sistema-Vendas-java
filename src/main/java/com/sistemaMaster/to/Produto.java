@@ -12,14 +12,17 @@ public class Produto {
     private Double precoCompra;
     private Double precoVenda;
     private String codigo_produto;
-    private String fornecedor;
+    private Fornecedor fornecedor;
     private String fabricante;
     private int quantidade;
+    private int quantidadeMinima;
+
 
     public Produto() {
         this.codigo = 0;
         this.nome = "";
         this.codigo_produto = "";
+        this.fornecedor= new Fornecedor();
         this.precoCompra = 0.0;
         this.precoVenda = 0.0;
         this.quantidade = 0;
@@ -82,11 +85,11 @@ public class Produto {
         this.codigo_produto = codigo_produto;
     }
 
-    public String getFornecedor() {
+    public Fornecedor getFornecedor() {
         return fornecedor;
     }
 
-    public void setFornecedor(String fornecedor) {
+    public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
 
@@ -98,7 +101,13 @@ public class Produto {
         this.fabricante = fabricante;
     }
 
+    public int getQuantidadeMinima() {
+        return quantidadeMinima;
+    }
 
+    public void setquantidadeMinima(int quantidadeMinima) {
+        this.quantidadeMinima = quantidadeMinima;
+    }
 
     @Override
     public String toString() {

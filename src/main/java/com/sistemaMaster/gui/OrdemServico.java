@@ -1,27 +1,41 @@
 package com.sistemaMaster.gui;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class OrdemServico extends JFrame {
-
+public class OrdemServico extends JInternalFrame {
+    private static OrdemServico instance = null;
+    
     private JTextField txtNomeCliente, txtPlacaVeiculo, txtTelefone;
     private JTextArea txtDescricaoServico;
     private JComboBox<String> comboPrioridade;
     private JButton btnGerarOS;
 
+    // Método estático para obter a instância única
+    public static OrdemServico getInstance() {
+        if (instance == null) {
+            instance = new OrdemServico();
+        }
+        return instance;
+    }
+
     public OrdemServico() {
         setTitle("Ordem de Serviço - Oficina Mecânica");
         setSize(450, 500);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         initComponents();
-        setVisible(true);
+        
+        // Adiciona listener para quando a janela for fechada
+        this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+                instance = null; // Permite que uma nova janela seja criada depois que esta for fechada
+            }
+        });
     }
 
     private void initComponents() {
@@ -107,9 +121,5 @@ public class OrdemServico extends JFrame {
                         "\nPlaca: " + placa +
                         "\nPrioridade: " + prioridade +
                         "\nDescrição:\n" + descricao);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new OrdemServico());
     }
 }

@@ -50,7 +50,7 @@ public class CompraDAO implements IDAO<Compra> {
             }
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -103,7 +103,7 @@ public class CompraDAO implements IDAO<Compra> {
 
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -122,7 +122,7 @@ public class CompraDAO implements IDAO<Compra> {
             ps.execute();
             c.confirmar();
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -166,7 +166,7 @@ public class CompraDAO implements IDAO<Compra> {
 
             return listaCompras;
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
 
@@ -208,7 +208,7 @@ public class CompraDAO implements IDAO<Compra> {
 
             return compra;
         } finally {
-            if (c != null) c.fechar();
+            if (c != null) c.close();
         }
     }
     
