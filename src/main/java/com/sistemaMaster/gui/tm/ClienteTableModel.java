@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ClienteTableModel extends AbstractTableModel {
 
-    private String colunas[] = {"Nome", "CPF"};
+    private String colunas[] = {"Nome", "Telefone", "Placa", "Modelo Moto", "Quilometragem"};
     private List<Cliente> dados;
 
     @Override
@@ -34,7 +34,13 @@ public class ClienteTableModel extends AbstractTableModel {
             case 0:
                 return cliente.getNome();
             case 1:
-                return cliente.getCpf();
+                return cliente.getTelefone();
+            case 2:
+                return cliente.getPlaca();
+            case 3:
+                return cliente.getModeloMoto();
+            case 4:
+                return cliente.getQuilometragemAtual();
             default:
                 throw new IndexOutOfBoundsException("Coluna inexistente!");
         }

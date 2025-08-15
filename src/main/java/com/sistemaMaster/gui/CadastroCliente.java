@@ -1,25 +1,41 @@
 package com.sistemaMaster.gui;
 
-import com.sistemaMaster.dao.ClienteDAO;
+import com.sistemaMaster.gui.controller.CadastroClienteController;
 import com.sistemaMaster.gui.tm.ClienteTableModel;
-import com.sistemaMaster.to.Cliente;
-import java.util.Date;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 
 /**
- * Janela de cadastro de cliente
+ * Janela de cadastro de cliente - Sistema de Vendas para Oficina Mecânica
+ * 
+ * Interface gráfica para cadastro completo de clientes.
+ * Implementa o padrão MVC delegando a lógica para o CadastroClienteController.
  *
- * @author Juliano
+ * @author Felipe da Costa Catarino - Implementação completa e melhorias
+ * @author Juliano Denner da Rocha - Interface base original
  */
-public class CadastroCliente extends javax.swing.JInternalFrame {
+public class CadastroCliente extends javax.swing.JInternalFrame implements CadastroClienteController.CadastroClienteView {
 
-    private Cliente cliente = null;
-    private ClienteDAO clienteDAO = new ClienteDAO();
+    private CadastroClienteController controller;
 
     public CadastroCliente() {
+        controller = new CadastroClienteController(this);
         initComponents();
+        controller.setComponentes(ftfNome, ftfTelefone, ftfPlaca, ftfModeloMoto, 
+                                 ftfQuilometragemAtual, ftfObservacao, ftfPesquisa, tbGrade);
         habilitarFormulario(false);
-        carregarGrade();
+        controller.carregarGrade();
+    }
+
+    // Implementação dos métodos da interface CadastroClienteView
+    @Override
+    public void mostrarMensagem(String mensagem, String titulo, int tipo) {
+        JOptionPane.showMessageDialog(this, mensagem, titulo, tipo);
+    }
+
+    @Override
+    public void focarCampo(javax.swing.JFormattedTextField campo) {
+        campo.requestFocus();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -33,13 +49,25 @@ public class CadastroCliente extends javax.swing.JInternalFrame {
         btExcluir = new javax.swing.JButton();
         btCancelar = new javax.swing.JButton();
         pnConteudo = new javax.swing.JPanel();
+        pnPesquisa = new javax.swing.JPanel();
+        lbPesquisar = new javax.swing.JLabel();
+        ftfPesquisa = new javax.swing.JTextField();
+        btPesquisar = new javax.swing.JButton();
+        btLimparPesquisa = new javax.swing.JButton();
         pnForm = new javax.swing.JPanel();
         lbNome = new javax.swing.JLabel();
-        lbCpf = new javax.swing.JLabel();
-        lbDataNascimento = new javax.swing.JLabel();
+        lbTelefone = new javax.swing.JLabel();
+        lbPlaca = new javax.swing.JLabel();
+        lbModeloMoto = new javax.swing.JLabel();
+        lbQuilometragemAtual = new javax.swing.JLabel();
+        lbObservacao = new javax.swing.JLabel();
         ftfNome = new javax.swing.JFormattedTextField();
-        ftfCpf = new javax.swing.JFormattedTextField();
-        ftfDataNascimento = new javax.swing.JFormattedTextField();
+        ftfTelefone = new javax.swing.JFormattedTextField();
+        ftfPlaca = new javax.swing.JFormattedTextField();
+        ftfModeloMoto = new javax.swing.JFormattedTextField();
+        ftfQuilometragemAtual = new javax.swing.JFormattedTextField();
+        ftfObservacao = new javax.swing.JTextArea();
+        scrollObservacao = new javax.swing.JScrollPane();
         spGrade = new javax.swing.JScrollPane();
         tbGrade = new javax.swing.JTable();
 
@@ -117,8 +145,44 @@ public class CadastroCliente extends javax.swing.JInternalFrame {
 
         getContentPane().add(pnBarraFerramentas, java.awt.BorderLayout.PAGE_START);
 
+        // Configuração do painel de pesquisa
+        pnPesquisa.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pesquisar Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(102, 153, 255)));
+        pnPesquisa.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        lbPesquisar.setText("Pesquisar por nome, placa ou modelo:");
+        pnPesquisa.add(lbPesquisar);
+
+        ftfPesquisa.setColumns(20);
+        ftfPesquisa.setToolTipText("Digite o nome do cliente, placa ou modelo da moto");
+        ftfPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ftfPesquisaKeyReleased(evt);
+            }
+        });
+        pnPesquisa.add(ftfPesquisa);
+
+        btPesquisar.setText("Pesquisar");
+        btPesquisar.setToolTipText("Clique para pesquisar");
+        btPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btPesquisarActionPerformed(evt);
+            }
+        });
+        pnPesquisa.add(btPesquisar);
+
+        btLimparPesquisa.setText("Limpar");
+        btLimparPesquisa.setToolTipText("Clique para limpar a pesquisa e mostrar todos os clientes");
+        btLimparPesquisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLimparPesquisaActionPerformed(evt);
+            }
+        });
+        pnPesquisa.add(btLimparPesquisa);
+
         pnConteudo.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 10, 10));
         pnConteudo.setLayout(new java.awt.BorderLayout());
+
+        pnConteudo.add(pnPesquisa, java.awt.BorderLayout.PAGE_START);
 
         pnForm.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEmptyBorder(5, 0, 5, 0), javax.swing.BorderFactory.createTitledBorder(null, "Formulário", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(102, 153, 255)))); // NOI18N
         pnForm.setOpaque(false);
@@ -130,21 +194,45 @@ public class CadastroCliente extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         pnForm.add(lbNome, gridBagConstraints);
 
-        lbCpf.setText("CPF:");
+        lbTelefone.setText("Telefone:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        pnForm.add(lbCpf, gridBagConstraints);
+        pnForm.add(lbTelefone, gridBagConstraints);
 
-        lbDataNascimento.setText("Data Nascimento:");
+        lbPlaca.setText("Placa:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        pnForm.add(lbDataNascimento, gridBagConstraints);
+        pnForm.add(lbPlaca, gridBagConstraints);
+
+        lbModeloMoto.setText("Modelo Moto:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(lbModeloMoto, gridBagConstraints);
+
+        lbQuilometragemAtual.setText("Quilometragem:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(lbQuilometragemAtual, gridBagConstraints);
+
+        lbObservacao.setText("Observação:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(lbObservacao, gridBagConstraints);
 
         ftfNome.setColumns(25);
         ftfNome.setPreferredSize(new java.awt.Dimension(200, 25));
@@ -154,182 +242,187 @@ public class CadastroCliente extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         pnForm.add(ftfNome, gridBagConstraints);
 
-        ftfCpf.setColumns(10);
-        ftfCpf.setPreferredSize(new java.awt.Dimension(200, 25));
-        ftfCpf.setMinimumSize(new java.awt.Dimension(200, 25));
+        ftfTelefone.setColumns(15);
+        ftfTelefone.setPreferredSize(new java.awt.Dimension(200, 25));
+        ftfTelefone.setMinimumSize(new java.awt.Dimension(200, 25));
         try {
-            ftfCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+            ftfTelefone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) #####-####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        ftfCpf.setValue(new String());
+        ftfTelefone.setValue(new String());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        pnForm.add(ftfCpf, gridBagConstraints);
+        pnForm.add(ftfTelefone, gridBagConstraints);
 
-        ftfDataNascimento.setColumns(10);
-        ftfDataNascimento.setPreferredSize(new java.awt.Dimension(200, 25));
-        ftfDataNascimento.setMinimumSize(new java.awt.Dimension(200, 25));
-        ftfDataNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
-        ftfDataNascimento.setValue(new Date());
+        ftfPlaca.setColumns(10);
+        ftfPlaca.setPreferredSize(new java.awt.Dimension(200, 25));
+        ftfPlaca.setMinimumSize(new java.awt.Dimension(200, 25));
+        ftfPlaca.setValue(new String());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        pnForm.add(ftfDataNascimento, gridBagConstraints);
+        pnForm.add(ftfPlaca, gridBagConstraints);
 
-        pnConteudo.add(pnForm, java.awt.BorderLayout.PAGE_START);
+        ftfModeloMoto.setColumns(20);
+        ftfModeloMoto.setPreferredSize(new java.awt.Dimension(200, 25));
+        ftfModeloMoto.setMinimumSize(new java.awt.Dimension(200, 25));
+        ftfModeloMoto.setValue(new String());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(ftfModeloMoto, gridBagConstraints);
+
+        ftfQuilometragemAtual.setColumns(10);
+        ftfQuilometragemAtual.setPreferredSize(new java.awt.Dimension(200, 25));
+        ftfQuilometragemAtual.setMinimumSize(new java.awt.Dimension(200, 25));
+        ftfQuilometragemAtual.setValue(0);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(ftfQuilometragemAtual, gridBagConstraints);
+
+        ftfObservacao.setColumns(30);
+        ftfObservacao.setRows(3);
+        ftfObservacao.setLineWrap(true);
+        ftfObservacao.setWrapStyleWord(true);
+        scrollObservacao.setViewportView(ftfObservacao);
+        scrollObservacao.setPreferredSize(new java.awt.Dimension(250, 75));
+        scrollObservacao.setMinimumSize(new java.awt.Dimension(250, 75));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        pnForm.add(scrollObservacao, gridBagConstraints);
+
+        pnConteudo.add(pnForm, java.awt.BorderLayout.WEST);
 
         tbGrade.setAutoCreateRowSorter(true);
         tbGrade.setModel(new ClienteTableModel());
+        tbGrade.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbGrade.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbGradeMouseClicked(evt);
             }
         });
         spGrade.setViewportView(tbGrade);
+        spGrade.setPreferredSize(new java.awt.Dimension(500, 300));
 
         pnConteudo.add(spGrade, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(pnConteudo, java.awt.BorderLayout.CENTER);
 
-        setBounds(10, 10, 405, 450);
-    }// </editor-fold>//GEN-END:initComponents
+        setBounds(10, 10, 800, 600);
+    }
 
     private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
-        cliente = new Cliente();
-        habilitarFormulario(true);
-        btExcluir.setEnabled(false);
+        controller.btNovoActionPerformed(evt);
     }//GEN-LAST:event_btNovoActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        if (validarFormulario()) {
-            cliente.setNome(ftfNome.getText().trim());
-            cliente.setCpf((String) ftfCpf.getValue());
-            cliente.setDataNascimento((Date) ftfDataNascimento.getValue());
-
-            if (cliente.getCodigo() == 0) {
-                try {
-                    clienteDAO.inserir(cliente);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Erro ao inserir o cliente.\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } else {
-                try {
-                    clienteDAO.alterar(cliente);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Erro ao alterar o cliente.\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            habilitarFormulario(false);
-            carregarGrade();
-        }
+        controller.btSalvarActionPerformed(evt);
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void btExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirActionPerformed
-        int opcao = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o cliente " + cliente + "?");
-        if (opcao == 0) {
-            try {
-                clienteDAO.excluir(cliente);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao excluir o cliente.\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            habilitarFormulario(false);
-            carregarGrade();
-        }
+        controller.btExcluirActionPerformed(evt);
     }//GEN-LAST:event_btExcluirActionPerformed
 
     private void btCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarActionPerformed
-        habilitarFormulario(false);
+        controller.btCancelarActionPerformed(evt);
     }//GEN-LAST:event_btCancelarActionPerformed
 
     private void tbGradeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbGradeMouseClicked
-        if (evt.getClickCount() == 2) {
-            ClienteTableModel tm = (ClienteTableModel) tbGrade.getModel();
-            cliente = tm.getRowValue(tbGrade.getRowSorter().convertRowIndexToModel(tbGrade.getSelectedRow()));
-
-            ftfNome.setValue(cliente.getNome());
-            ftfCpf.setValue(cliente.getCpf());
-            ftfDataNascimento.setValue(cliente.getDataNascimento());
-
-            habilitarFormulario(true);
-        }
+        controller.tbGradeMouseClicked(evt);
     }//GEN-LAST:event_tbGradeMouseClicked
 
-    private void habilitarFormulario(boolean ativo) {
+    private void ftfPesquisaKeyReleased(java.awt.event.KeyEvent evt) {
+        controller.ftfPesquisaKeyReleased(evt);
+    }
+
+    private void btPesquisarActionPerformed(java.awt.event.ActionEvent evt) {
+        controller.btPesquisarActionPerformed(evt);
+    }
+
+    private void btLimparPesquisaActionPerformed(java.awt.event.ActionEvent evt) {
+        controller.btLimparPesquisaActionPerformed(evt);
+    }
+
+    public void habilitarFormulario(boolean ativo) {
         btNovo.setEnabled(!ativo);
         btSalvar.setEnabled(ativo);
         btExcluir.setEnabled(ativo);
         btCancelar.setEnabled(ativo);
         ftfNome.setEnabled(ativo);
-        ftfCpf.setEnabled(ativo);
-        ftfDataNascimento.setEnabled(ativo);
+        ftfTelefone.setEnabled(ativo);
+        ftfPlaca.setEnabled(ativo);
+        ftfModeloMoto.setEnabled(ativo);
+        ftfQuilometragemAtual.setEnabled(ativo);
+        ftfObservacao.setEnabled(ativo);
         tbGrade.setEnabled(!ativo);
+        ftfPesquisa.setEnabled(!ativo);
+        btPesquisar.setEnabled(!ativo);
+        btLimparPesquisa.setEnabled(!ativo);
 
         if (!ativo) {
             limpaFormulario();
         }
     }
 
-    private void limpaFormulario() {
-        cliente = null;
+    public void limpaFormulario() {
         ftfNome.setValue("");
-        ftfCpf.setValue("");
-        ftfDataNascimento.setValue(new Date());
+        ftfTelefone.setValue("");
+        ftfPlaca.setValue("");
+        ftfModeloMoto.setValue("");
+        ftfQuilometragemAtual.setValue(0);
+        ftfObservacao.setText("");
     }
 
-    private boolean validarFormulario() {
-        if (ftfNome.getText().trim().length() < 2) {
-            JOptionPane.showMessageDialog(this, "Nome inválido.", "Alerta", JOptionPane.WARNING_MESSAGE);
-            ftfNome.requestFocus();
-            return false;
-        }
-        if (ftfCpf.getText().trim().length() != 14) {
-            JOptionPane.showMessageDialog(this, "CPF inválido.", "Alerta", JOptionPane.WARNING_MESSAGE);
-            ftfCpf.requestFocus();
-            return false;
-        }
-        if (((Date) ftfDataNascimento.getValue()).after(new Date())) {
-            JOptionPane.showMessageDialog(this, "Data de nascimento inválida.", "Alerta", JOptionPane.WARNING_MESSAGE);
-            ftfDataNascimento.requestFocus();
-            return false;
-        }
-        return true;
+
+
+    public void carregarGrade() {
+        controller.carregarGrade();
     }
 
-    private void carregarGrade() {
-        ClienteTableModel tm = (ClienteTableModel) tbGrade.getModel();
-        try {
-            tm.setDados(clienteDAO.listarTodos());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar grade.\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+    public void pesquisarClientes() {
+        controller.pesquisarClientes();
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barraFerramentas;
     private javax.swing.JButton btCancelar;
     private javax.swing.JButton btExcluir;
     private javax.swing.JButton btNovo;
     private javax.swing.JButton btSalvar;
-    private javax.swing.JFormattedTextField ftfCpf;
-    private javax.swing.JFormattedTextField ftfDataNascimento;
+    private javax.swing.JButton btPesquisar;
+    private javax.swing.JButton btLimparPesquisa;
     private javax.swing.JFormattedTextField ftfNome;
-    private javax.swing.JLabel lbCpf;
-    private javax.swing.JLabel lbDataNascimento;
+    private javax.swing.JFormattedTextField ftfTelefone;
+    private javax.swing.JFormattedTextField ftfPlaca;
+    private javax.swing.JFormattedTextField ftfModeloMoto;
+    private javax.swing.JFormattedTextField ftfQuilometragemAtual;
+    private javax.swing.JTextArea ftfObservacao;
+    private javax.swing.JTextField ftfPesquisa;
     private javax.swing.JLabel lbNome;
+    private javax.swing.JLabel lbTelefone;
+    private javax.swing.JLabel lbPlaca;
+    private javax.swing.JLabel lbModeloMoto;
+    private javax.swing.JLabel lbQuilometragemAtual;
+    private javax.swing.JLabel lbObservacao;
+    private javax.swing.JLabel lbPesquisar;
     private javax.swing.JPanel pnBarraFerramentas;
     private javax.swing.JPanel pnConteudo;
     private javax.swing.JPanel pnForm;
+    private javax.swing.JPanel pnPesquisa;
     private javax.swing.JScrollPane spGrade;
+    private javax.swing.JScrollPane scrollObservacao;
     private javax.swing.JTable tbGrade;
-    // End of variables declaration//GEN-END:variables
+
 }

@@ -20,7 +20,7 @@ import com.sistemaMaster.dao.Conexao;
  */
 
 public class Dashboard extends JInternalFrame {
-  private JLabel lblVendasDia, lblVendasMes, lblVendasAno, lblClientes, lblProdutos, lblFornecedores, lblTotalVendido;
+  private JLabel lblVendasDia, lblVendasMes, lblVendasAno, lblClientes, lblProdutos, lblFornecedores, lblTotalVendido, lblMaoDeObra;
 
   public Dashboard() {
     super("Dashboard", true, true, true, true);
@@ -37,6 +37,7 @@ public class Dashboard extends JInternalFrame {
     lblVendasMes = criarCard("Vendas do Mês", "#2196F3");
     lblVendasAno = criarCard("Vendas do Ano", "#FF9800");
     lblTotalVendido = criarCard("Total Vendido", "#9C27B0");
+    lblMaoDeObra = criarCard("Mão de Obra", "#795548");
     lblClientes = criarCard("Clientes", "#607D8B");
     lblProdutos = criarCard("Produtos", "#009688");
     lblFornecedores = criarCard("Fornecedores", "#E91E63");
@@ -45,6 +46,7 @@ public class Dashboard extends JInternalFrame {
     panel.add(lblVendasMes);
     panel.add(lblVendasAno);
     panel.add(lblTotalVendido);
+    panel.add(lblMaoDeObra);
     panel.add(lblClientes);
     panel.add(lblProdutos);
     panel.add(lblFornecedores);
@@ -73,7 +75,9 @@ public class Dashboard extends JInternalFrame {
   }
 
   private void atualizarDashboard() {
-    try (Connection conn = new Conexao().getConexao();) {
+    Connection conn = null;
+    try {
+      conn = new Conexao().getConexao();
       // Datas para filtro
       LocalDate hoje = LocalDate.now();
       String dataHoje = hoje.format(DateTimeFormatter.ISO_DATE);
@@ -91,6 +95,8 @@ public class Dashboard extends JInternalFrame {
           "SELECT IFNULL(SUM(ValorTotalVenda),0) FROM tbvenda WHERE DataVenda >= ? AND DataVenda <= ?", dataAno, dataHoje);
       // Total vendido
       double totalVendido = consultaValor(conn, "SELECT IFNULL(SUM(ValorTotalVenda),0) FROM tbvenda", (String[]) null);
+      // Total mão de obra
+      double totalMaoDeObra = consultaValor(conn, "SELECT IFNULL(SUM(MaoDeObra),0) FROM tbvenda", (String[]) null);
 
       // Clientes
       int clientes = consultaInteiro(conn, "SELECT COUNT(*) FROM tbcliente");
@@ -103,11 +109,21 @@ public class Dashboard extends JInternalFrame {
       lblVendasMes.setText(formatarCard("Vendas do Mês", vendasMes));
       lblVendasAno.setText(formatarCard("Vendas do Ano", vendasAno));
       lblTotalVendido.setText(formatarCard("Total Vendido", totalVendido));
+      lblMaoDeObra.setText(formatarCard("Mão de Obra", totalMaoDeObra));
       lblClientes.setText(formatarCard("Clientes", clientes));
       lblProdutos.setText(formatarCard("Produtos", produtos));
       lblFornecedores.setText(formatarCard("Fornecedores", fornecedores));
     } catch (Exception ex) {
-      JOptionPane.showMessageDialog(this, "Erro ao atualizar dashboard: " + ex.getMessage());
+      JOptionPane.showMessageDialog(this, "Erro ao atualizar dashboard: " + ex.getMessage() + "\nDetalhes: " + ex.getClass().getSimpleName());
+      ex.printStackTrace();
+    } finally {
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (SQLException e) {
+          // Ignora erro ao fechar conexão
+        }
+      }
     }
   }
 
@@ -150,8 +166,10 @@ public class Dashboard extends JInternalFrame {
 
   private JFreeChart criarGraficoVendas() {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    Connection conn = null;
 
-    try (Connection conn = new Conexao().getConexao();) {
+    try {
+      conn = new Conexao().getConexao();
       LocalDate hoje = LocalDate.now();
       for (int i = 6; i >= 0; i--) {
         LocalDate data = hoje.minusDays(i);
@@ -165,6 +183,14 @@ public class Dashboard extends JInternalFrame {
       for (int i = 6; i >= 0; i--) {
         LocalDate data = LocalDate.now().minusDays(i);
         dataset.addValue(0, "Vendas", data.format(DateTimeFormatter.ofPattern("dd/MM")));
+      }
+    } finally {
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (SQLException e) {
+          // Ignora erro ao fechar conexão
+        }
       }
     }
 

@@ -503,7 +503,9 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
             ivtm.setDados(venda.getItens());
 
             // Atualiza o valor total (produtos + mão de obra)
-            double valorTotal = venda.getValorTotal() + ((Number) ftMaoDeObra.getValue()).doubleValue();
+            double valorTotalProdutos = venda.getValorTotal();
+            double maoDeObra = ((Number) ftMaoDeObra.getValue()).doubleValue();
+            double valorTotal = valorTotalProdutos + maoDeObra;
 
             ftfValorTotal.setValue(valorTotal);     
             // Atualize o valor do rodapé sempre que o valor total mudar
@@ -522,6 +524,14 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
                     JOptionPane.YES_NO_OPTION) == 0) {
                 venda.removeItem(iv);
                 ivtm.setDados(venda.getItens());
+                
+                // Atualiza o valor total após remoção
+                double valorTotalProdutos = venda.getValorTotal();
+                double maoDeObra = ((Number) ftMaoDeObra.getValue()).doubleValue();
+                double valorTotal = valorTotalProdutos + maoDeObra;
+                
+                ftfValorTotal.setValue(valorTotal);
+                ftfRodapeValorTotal.setValue(valorTotal);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Selecione uma linha para remover.", "Alerta",
@@ -548,7 +558,9 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
 
             ftfCliente.setValue(venda.getCliente());
             ftfDataVenda.setValue(venda.getDataVenda());
-            ftfValorTotal.setValue(venda.getValorTotal());
+            ftfValorTotal.setValue(venda.getValorTotalVenda()); // Usar o valor total com mão de obra
+            ftMaoDeObra.setValue(venda.getMaoDeObra()); // Carregar o valor da mão de obra
+            ftfRodapeValorTotal.setValue(venda.getValorTotalVenda()); // Atualizar o rodapé
 
             ItemVendaTableModel ivtm = (ItemVendaTableModel) tbGradeItens.getModel();
             ivtm.setDados(venda.getItens());
@@ -687,6 +699,11 @@ public class LancamentoVenda extends javax.swing.JInternalFrame {
             venda.setFormaPagamento(((FormaPagamento) opcaoPagamento.getSelectedItem()).getId());
             Number aux = (Number) ftMaoDeObra.getValue();
             venda.setMaoDeObra(aux != null ? aux.doubleValue() : 0.0);
+            
+            // Define os valores totais corretamente
+            double valorTotalProdutos = venda.getValorTotal(); // Soma dos produtos
+            venda.setValorTotalProduto(valorTotalProdutos);
+            venda.setValorTotalVenda(valorTotalProdutos + venda.getMaoDeObra()); // Total com mão de obra
 
             if (finalizar) {
                 venda.setSituacao(Situacao.FINALIZADA);

@@ -6,9 +6,12 @@ import com.sistemaMaster.to.Fornecedor;
 import javax.swing.JOptionPane;
 
 /**
- * Janela de cadastro de fornecedor
+ * Janela de cadastro de fornecedor - Sistema de Vendas para Oficina Mecânica
+ * 
+ * Interface para cadastro completo de fornecedores com validações e persistência.
  *
- * @author Juliano
+ * @author Felipe da Costa Catarino - Implementação completa e melhorias
+ * @author Juliano Denner da Rocha - Interface base original
  */
 public class CadastroFornecedor extends javax.swing.JInternalFrame {
 

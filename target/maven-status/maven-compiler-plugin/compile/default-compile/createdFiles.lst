@@ -19,6 +19,7 @@ com/sistemaMaster/gui/Menu$3.class
 com/sistemaMaster/gui/LancamentoCompra$3.class
 com/sistemaMaster/to/Compra.class
 com/sistemaMaster/gui/CadastroProduto$5.class
+com/sistemaMaster/gui/CadastroCliente$6.class
 com/sistemaMaster/gui/CadastroCliente$3.class
 com/sistemaMaster/gui/Estoque$1.class
 com/sistemaMaster/gui/CadastroProduto$2.class
@@ -39,6 +40,7 @@ com/sistemaMaster/gui/Menu$11.class
 com/sistemaMaster/gui/CadastroCliente$1.class
 com/sistemaMaster/gui/tm/ItemCompraTableModel.class
 com/sistemaMaster/to/ItemCompra.class
+com/sistemaMaster/gui/CadastroCliente$8.class
 com/sistemaMaster/gui/Menu$5.class
 com/sistemaMaster/gui/CadastroFornecedor$5.class
 com/sistemaMaster/dao/VendaDAO.class
@@ -50,6 +52,7 @@ com/sistemaMaster/gui/LancamentoVenda$4.class
 com/sistemaMaster/gui/LancamentoVenda$10.class
 com/sistemaMaster/gui/tm/FornecedorTableModel.class
 com/sistemaMaster/to/Produto.class
+com/sistemaMaster/gui/controller/FechamentoController.class
 com/sistemaMaster/gui/controller/ControleEstoque.class
 com/sistemaMaster/dao/Conexao.class
 com/sistemaMaster/gui/Estoque.class
@@ -71,6 +74,7 @@ com/sistemaMaster/gui/CadastroProduto$3.class
 com/sistemaMaster/gui/BuscaCliente$1.class
 com/sistemaMaster/gui/tm/VendaTableModel.class
 com/sistemaMaster/gui/Estoque$2.class
+com/sistemaMaster/gui/CadastroCliente$7.class
 com/sistemaMaster/gui/LancamentoVenda$6.class
 com/sistemaMaster/gui/CadernoFiado.class
 com/sistemaMaster/gui/Menu$16.class
@@ -81,6 +85,7 @@ com/sistemaMaster/gui/tm/CompraTableModel.class
 com/sistemaMaster/gui/Menu$7.class
 com/sistemaMaster/gui/LancamentoVenda$3.class
 com/sistemaMaster/to/enums/Situacao.class
+com/sistemaMaster/gui/IFechamentoView.class
 com/sistemaMaster/gui/LancamentoVenda$9.class
 com/sistemaMaster/gui/controller/MenuController.class
 com/sistemaMaster/gui/LancamentoCompra$9.class
@@ -92,8 +97,10 @@ com/sistemaMaster/gui/CadastroProduto$1.class
 com/sistemaMaster/dao/FornecedorDAO.class
 com/sistemaMaster/gui/LancamentoCompra$6.class
 com/sistemaMaster/gui/BuscaFornecedor$2.class
+com/sistemaMaster/gui/controller/CadastroClienteController.class
 com/sistemaMaster/gui/CadastroCliente$5.class
 com/sistemaMaster/gui/LancamentoCompra$2.class
+com/sistemaMaster/gui/controller/CadastroClienteController$CadastroClienteView.class
 com/sistemaMaster/gui/Menu$1.class
 com/sistemaMaster/auxiliar/PDFGenerator.class
 com/sistemaMaster/gui/LancamentoVenda$2.class

@@ -118,11 +118,23 @@ public class PDFGenerator {
     }
     
     /**
-     * Gera PDF do Fechamento de Caixa
+     * Gera PDF do Fechamento de Caixa (versão básica - mantida para compatibilidade)
      */
     public static void gerarFechamentoPDF(String dataFechamento, double totalVendas, double totalDinheiro, 
                                         double totalDebito, double totalCredito, double totalPix, 
                                         double lucro, int totalServicos, String caminhoArquivo) {
+        gerarFechamentoPDF(dataFechamento, totalVendas, totalDinheiro, totalDebito, totalCredito, totalPix, 
+                          lucro, totalServicos, 0, 0, 0, 0, caminhoArquivo);
+    }
+    
+    /**
+     * Gera PDF do Fechamento de Caixa - Oficina de Motocicletas (versão completa)
+     */
+    public static void gerarFechamentoPDF(String dataFechamento, double totalVendas, double totalDinheiro, 
+                                        double totalDebito, double totalCredito, double totalPix, 
+                                        double lucro, int totalServicos, double totalMaoDeObra, 
+                                        double totalPecas, int quantidadeClientes, int quantidadeMotocicletas, 
+                                        String caminhoArquivo) {
         try {
             Document document = new Document(PageSize.A4);
             PdfWriter.getInstance(document, new FileOutputStream(caminhoArquivo));
@@ -186,6 +198,34 @@ public class PDFGenerator {
             adicionarCelula(tabelaPagamento, "PIX:", String.format("R$ %.2f", totalPix), labelFont, valueFont);
             
             document.add(tabelaPagamento);
+            
+            // Seção específica para oficina de motocicletas (somente se houver dados)
+            if (totalMaoDeObra > 0 || totalPecas > 0 || quantidadeClientes > 0 || quantidadeMotocicletas > 0) {
+                PdfPTable tabelaOficina = new PdfPTable(2);
+                tabelaOficina.setWidthPercentage(100);
+                tabelaOficina.setSpacingAfter(20);
+                
+                // Cabeçalho
+                PdfPCell headerOficina = new PdfPCell(new Phrase("DADOS ESPECÍFICOS DA OFICINA", labelFont));
+                headerOficina.setColspan(2);
+                headerOficina.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                headerOficina.setPadding(10);
+                headerOficina.setHorizontalAlignment(Element.ALIGN_CENTER);
+                tabelaOficina.addCell(headerOficina);
+                
+                // Dados da oficina
+                adicionarCelula(tabelaOficina, "Mão de Obra:", String.format("R$ %.2f", totalMaoDeObra), labelFont, valueFont);
+                adicionarCelula(tabelaOficina, "Peças:", String.format("R$ %.2f", totalPecas), labelFont, valueFont);
+                adicionarCelula(tabelaOficina, "Clientes Atendidos:", String.valueOf(quantidadeClientes), labelFont, valueFont);
+                adicionarCelula(tabelaOficina, "Motocicletas Atendidas:", String.valueOf(quantidadeMotocicletas), labelFont, valueFont);
+                
+                if (quantidadeClientes > 0) {
+                    double ticketMedio = totalVendas / quantidadeClientes;
+                    adicionarCelula(tabelaOficina, "Ticket Médio:", String.format("R$ %.2f", ticketMedio), labelFont, valueFont);
+                }
+                
+                document.add(tabelaOficina);
+            }
             
             // Rodapé com data de geração
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

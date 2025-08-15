@@ -18,11 +18,15 @@ public class ClienteDAO implements IDAO<Cliente> {
         Conexao c = null;
         try {
             c = new Conexao();
-            String sql = "INSERT INTO TBCLIENTE (NOME, CPF, DATANASCIMENTO) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO TBCLIENTE (NOME, TELEFONE, PLACA, MODELOMOTO, DATACADASTRO, QUILOMETRAGEMATUAL, OBSERVACAO) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = c.getConexao().prepareStatement(sql);
             ps.setString(1, cliente.getNome());
-            ps.setString(2, cliente.getCpf());
-            ps.setDate(3, new Date(cliente.getDataNascimento().getTime()));
+            ps.setString(2, cliente.getTelefone());
+            ps.setString(3, cliente.getPlaca());
+            ps.setString(4, cliente.getModeloMoto());
+            ps.setDate(5, new Date(cliente.getDataCadastro().getTime()));
+            ps.setInt(6, cliente.getQuilometragemAtual());
+            ps.setString(7, cliente.getObservacao());
             ps.execute();
             c.confirmar();
         } finally {
@@ -35,12 +39,16 @@ public class ClienteDAO implements IDAO<Cliente> {
         Conexao c = null;
         try {
             c = new Conexao();
-            String sql = "UPDATE TBCLIENTE SET NOME=?, CPF=?, DATANASCIMENTO=? WHERE CODIGO=?";
+            String sql = "UPDATE TBCLIENTE SET NOME=?, TELEFONE=?, PLACA=?, MODELOMOTO=?, DATACADASTRO=?, QUILOMETRAGEMATUAL=?, OBSERVACAO=? WHERE CODIGO=?";
             PreparedStatement ps = c.getConexao().prepareStatement(sql);
             ps.setString(1, cliente.getNome());
-            ps.setString(2, cliente.getCpf());
-            ps.setDate(3, new Date(cliente.getDataNascimento().getTime()));
-            ps.setInt(4, cliente.getCodigo());
+            ps.setString(2, cliente.getTelefone());
+            ps.setString(3, cliente.getPlaca());
+            ps.setString(4, cliente.getModeloMoto());
+            ps.setDate(5, new Date(cliente.getDataCadastro().getTime()));
+            ps.setInt(6, cliente.getQuilometragemAtual());
+            ps.setString(7, cliente.getObservacao());
+            ps.setInt(8, cliente.getCodigo());
             ps.execute();
             c.confirmar();
         } finally {
@@ -77,8 +85,12 @@ public class ClienteDAO implements IDAO<Cliente> {
                 Cliente cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("CODIGO"));
                 cliente.setNome(rs.getString("NOME"));
-                cliente.setCpf(rs.getString("CPF"));
-                cliente.setDataNascimento(rs.getDate("DATANASCIMENTO"));
+                cliente.setTelefone(rs.getString("TELEFONE"));
+                cliente.setPlaca(rs.getString("PLACA"));
+                cliente.setModeloMoto(rs.getString("MODELOMOTO"));
+                cliente.setDataCadastro(rs.getDate("DATACADASTRO"));
+                cliente.setQuilometragemAtual(rs.getInt("QUILOMETRAGEMATUAL"));
+                cliente.setObservacao(rs.getString("OBSERVACAO"));
                 listaClientes.add(cliente);
             }
             return listaClientes;
@@ -108,9 +120,44 @@ public class ClienteDAO implements IDAO<Cliente> {
         if (rs.next()) {
             cliente.setCodigo(rs.getInt("CODIGO"));
             cliente.setNome(rs.getString("NOME"));
-            cliente.setCpf(rs.getString("CPF"));
-            cliente.setDataNascimento(rs.getDate("DATANASCIMENTO"));
+            cliente.setTelefone(rs.getString("TELEFONE"));
+            cliente.setPlaca(rs.getString("PLACA"));
+            cliente.setModeloMoto(rs.getString("MODELOMOTO"));
+            cliente.setDataCadastro(rs.getDate("DATACADASTRO"));
+            cliente.setQuilometragemAtual(rs.getInt("QUILOMETRAGEMATUAL"));
+            cliente.setObservacao(rs.getString("OBSERVACAO"));
         }
         return cliente;
+    }
+
+    public ArrayList<Cliente> pesquisarPorTexto(String texto) throws Exception {
+        Conexao c = null;
+        try {
+            c = new Conexao();
+            String sql = "SELECT * FROM TBCLIENTE WHERE UPPER(NOME) LIKE ? OR UPPER(PLACA) LIKE ? OR UPPER(MODELOMOTO) LIKE ? ORDER BY NOME";
+            PreparedStatement ps = c.getConexao().prepareStatement(sql);
+            String textoUpper = "%" + texto.toUpperCase() + "%";
+            ps.setString(1, textoUpper);
+            ps.setString(2, textoUpper);
+            ps.setString(3, textoUpper);
+            ResultSet rs = ps.executeQuery();
+
+            ArrayList<Cliente> listaClientes = new ArrayList<>();
+            while (rs.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setCodigo(rs.getInt("CODIGO"));
+                cliente.setNome(rs.getString("NOME"));
+                cliente.setTelefone(rs.getString("TELEFONE"));
+                cliente.setPlaca(rs.getString("PLACA"));
+                cliente.setModeloMoto(rs.getString("MODELOMOTO"));
+                cliente.setDataCadastro(rs.getDate("DATACADASTRO"));
+                cliente.setQuilometragemAtual(rs.getInt("QUILOMETRAGEMATUAL"));
+                cliente.setObservacao(rs.getString("OBSERVACAO"));
+                listaClientes.add(cliente);
+            }
+            return listaClientes;
+        } finally {
+            if (c != null) c.close();
+        }
     }
 }

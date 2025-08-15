@@ -4,6 +4,7 @@ import com.sistemaMaster.dao.FechamentoDAO;
 import com.sistemaMaster.dao.Conexao;
 import com.sistemaMaster.to.FechamentoDia;
 import com.sistemaMaster.auxiliar.PDFGenerator;
+import com.sistemaMaster.gui.IFechamentoView;
 import javax.swing.JOptionPane;
 import java.awt.Desktop;
 import java.io.File;
@@ -16,12 +17,157 @@ import java.util.Set;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Controller para o sistema de fechamento de caixa
+ * Responsável pela lógica de negócio e comunicação entre a View e o Model
+ */
 public class FechamentoController {
     
     private FechamentoDAO fechamentoDAO;
+    private IFechamentoView view;
+    private FechamentoDia fechamentoAtual;
     
     public FechamentoController() {
         this.fechamentoDAO = new FechamentoDAO();
+    }
+    
+    /**
+     * Define a view que será controlada por este controller
+     * @param view interface da view
+     */
+    public void setView(IFechamentoView view) {
+        this.view = view;
+    }
+    
+    /**
+     * Inicializa o fechamento carregando os dados do dia
+     */
+    public void inicializarFechamento() {
+        if (view != null) {
+            view.exibirCarregamento(true);
+        }
+        
+        try {
+            fechamentoAtual = calcularDadosFechamento();
+            if (view != null) {
+                view.atualizarDadosFechamento(fechamentoAtual);
+            }
+        } catch (Exception e) {
+            if (view != null) {
+                view.exibirErro("Erro ao carregar dados do fechamento: " + e.getMessage());
+                // Cria um fechamento vazio em caso de erro
+                fechamentoAtual = new FechamentoDia(new Date(), 0, 0, 0, 0, 0, 0, 0);
+                view.atualizarDadosFechamento(fechamentoAtual);
+            }
+        } finally {
+            if (view != null) {
+                view.exibirCarregamento(false);
+            }
+        }
+    }
+    
+    /**
+     * Processa a ação de salvar fechamento
+     */
+    public void processarSalvarFechamento() {
+        if (fechamentoAtual == null) {
+            if (view != null) {
+                view.exibirErro("Nenhum fechamento para salvar.");
+            }
+            return;
+        }
+        
+        try {
+            String mensagemConfirmacao = String.format(
+                "Confirma o salvamento do fechamento do dia?\n\n" +
+                "Total de Vendas: R$ %.2f\n" +
+                "Mão de Obra: R$ %.2f\n" +
+                "Peças: R$ %.2f\n" +
+                "Clientes Atendidos: %d",
+                fechamentoAtual.getTotalVendas(),
+                fechamentoAtual.getTotalMaoDeObra(),
+                fechamentoAtual.getTotalPecas(),
+                fechamentoAtual.getQuantidadeClientes()
+            );
+            
+            if (view != null && !view.exibirConfirmacao(mensagemConfirmacao)) {
+                return;
+            }
+            
+            boolean salvou = salvarFechamento(fechamentoAtual);
+            if (salvou && view != null) {
+                view.exibirSucesso("Fechamento salvo com sucesso!");
+            }
+        } catch (Exception e) {
+            if (view != null) {
+                view.exibirErro("Erro ao salvar fechamento: " + e.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * Processa a ação de gerar PDF
+     */
+    public void processarGerarPDF() {
+        if (fechamentoAtual == null) {
+            if (view != null) {
+                view.exibirErro("Nenhum fechamento para gerar PDF.");
+            }
+            return;
+        }
+        
+        try {
+            String caminhoCompleto = gerarPDF(fechamentoAtual);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            String nomeArquivo = "Fechamento_" + sdf.format(fechamentoAtual.getDataFechamento()) + ".pdf";
+            
+            if (view != null) {
+                view.confirmarAberturaPDF(caminhoCompleto, nomeArquivo);
+            }
+        } catch (Exception e) {
+            if (view != null) {
+                view.exibirErro("Erro ao gerar PDF: " + e.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * Processa a ação de carregar histórico
+     */
+    public void processarCarregarHistorico() {
+        try {
+            ArrayList<FechamentoDia> fechamentos = obterHistoricoFechamentos();
+            if (view != null) {
+                view.atualizarHistorico(fechamentos);
+            }
+        } catch (Exception e) {
+            if (view != null) {
+                view.exibirErro("Erro ao carregar histórico: " + e.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * Abre o arquivo PDF
+     * @param caminhoArquivo caminho do arquivo
+     */
+    public void abrirPDFArquivo(String caminhoArquivo) {
+        try {
+            Desktop.getDesktop().open(new File(caminhoArquivo));
+        } catch (Exception ex) {
+            if (view != null) {
+                view.exibirErro("Não foi possível abrir o arquivo automaticamente.\n" +
+                        "Você pode encontrá-lo em: " + caminhoArquivo);
+            }
+        }
+    }
+    
+    /**
+     * Retorna o fechamento atual
+     * @return fechamento atual ou null se não houver
+     */
+    public FechamentoDia getFechamentoAtual() {
+        return fechamentoAtual;
     }
     
     /**
@@ -44,11 +190,14 @@ public class FechamentoController {
         Date dataFechamento = new Date(fimDoDia);
 
         double totalVendas = 0, totalDinheiro = 0, totalDebito = 0, totalCredito = 0, totalPix = 0, lucro = 0;
-        int totalServicos = 0;
+        double totalMaoDeObra = 0, totalPecas = 0;
+        int totalServicos = 0, quantidadeClientes = 0, quantidadeMotocicletasAtendidas = 0;
 
         try {
             Conexao c = new Conexao();
-            String sql = "SELECT v.CODIGO, v.VALORTOTALPRODUTO, v.FORMA_PAGAMENTO, iv.QUANTIDADE, iv.VALORUNITARIO, p.PRECOVENDA, p.PRECOCOMPRA "
+            
+            // Consulta principal para vendas e produtos
+            String sql = "SELECT v.CODIGO, v.VALORTOTALPRODUTO, v.MaoDeObra, v.FORMA_PAGAMENTO, iv.QUANTIDADE, iv.VALORUNITARIO, p.PRECOVENDA, p.PRECOCOMPRA "
                     +
                     "FROM TBVENDA v " +
                     "JOIN TBITEMVENDA iv ON v.CODIGO = iv.CODIGOVENDA " +
@@ -63,7 +212,9 @@ public class FechamentoController {
             Set<Integer> vendasContadas = new HashSet<>();
             while (rs.next()) {
                 int forma = rs.getInt("FORMA_PAGAMENTO");
-                double valorVenda = rs.getDouble("VALORUNITARIO") * rs.getInt("QUANTIDADE");
+                double valorProduto = rs.getDouble("VALORUNITARIO") * rs.getInt("QUANTIDADE");
+                double maoDeObraVenda = rs.getDouble("MaoDeObra");
+                double valorVenda = valorProduto + maoDeObraVenda;
                 int quantidade = rs.getInt("QUANTIDADE");
                 double precoVenda = rs.getDouble("PRECOVENDA");
                 double precoCompra = rs.getDouble("PRECOCOMPRA");
@@ -72,6 +223,7 @@ public class FechamentoController {
                 // Soma apenas uma vez por venda para os totais por forma de pagamento
                 if (!vendasContadas.contains(codigoVenda)) {
                     totalVendas += valorVenda;
+                    totalMaoDeObra += maoDeObraVenda;
                     vendasContadas.add(codigoVenda);
                     switch (forma) {
                         case 1:
@@ -88,17 +240,33 @@ public class FechamentoController {
                             break;
                     }
                 }
-                // Lucro bruto por item vendido
+                // Soma valor das peças e calcula lucro bruto por item vendido
+                totalPecas += valorProduto;
                 lucro += (precoVenda - precoCompra) * quantidade;
                 totalServicos++;
             }
+            
+            // Consulta para quantidade de clientes únicos atendidos
+            String sqlClientes = "SELECT COUNT(DISTINCT v.CODIGOCLIENTE) as qtd_clientes FROM TBVENDA v WHERE v.DATAVENDA BETWEEN ? AND ? AND v.SITUACAO = 2";
+            PreparedStatement psClientes = c.getConexao().prepareStatement(sqlClientes);
+            psClientes.setLong(1, inicioDoDia);
+            psClientes.setLong(2, fimDoDia);
+            ResultSet rsClientes = psClientes.executeQuery();
+            if (rsClientes.next()) {
+                quantidadeClientes = rsClientes.getInt("qtd_clientes");
+            }
+            
+            // Para motocicletas atendidas, vamos usar a quantidade de clientes únicos
+            // (cada cliente representa uma motocicleta atendida)
+            quantidadeMotocicletasAtendidas = quantidadeClientes;
+            
             c.close();
         } catch (Exception ex) {
             throw new RuntimeException("Erro ao buscar vendas do dia: " + ex.getMessage(), ex);
         }
 
         return new FechamentoDia(dataFechamento, totalVendas, totalDinheiro, totalDebito, totalCredito, totalPix,
-                lucro, totalServicos);
+                lucro, totalServicos, totalMaoDeObra, totalPecas, quantidadeClientes, quantidadeMotocicletasAtendidas);
     }
     
     /**
@@ -154,6 +322,10 @@ public class FechamentoController {
                 fechamento.getTotalPix(),
                 fechamento.getLucroBruto(),
                 fechamento.getTotalServicos(),
+                fechamento.getTotalMaoDeObra(),
+                fechamento.getTotalPecas(),
+                fechamento.getQuantidadeClientes(),
+                fechamento.getQuantidadeMotocicletasAtendidas(),
                 caminhoCompleto);
 
         return caminhoCompleto;

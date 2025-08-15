@@ -10,9 +10,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * Classe de acesso a dados da venda
+ * Classe de acesso a dados da venda - Data Access Object
+ * 
+ * Responsável por todas as operações de persistência relacionadas às vendas,
+ * incluindo CRUD completo e consultas específicas para relatórios.
  *
- * @author Juliano
+ * @author Felipe da Costa Catarino - Implementação completa e melhorias
+ * @author Juliano Denner da Rocha - Estrutura base original
  */
 public class VendaDAO implements IDAO<Venda> {
 

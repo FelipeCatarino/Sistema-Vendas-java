@@ -3,7 +3,7 @@ package com.sistemaMaster.to;
 import java.util.Date;
 
 /**
- * Classe que representa um fechamento de caixa diário
+ * Classe que representa um fechamento de caixa diário para oficina mecânica
  *
  * @author Sistema
  */
@@ -19,6 +19,13 @@ public class FechamentoDia {
     private double lucroBruto;
     private int totalServicos;
     
+    // Campos específicos para oficina mecânica
+    private double totalMaoDeObra;
+    private double totalPecas;
+    private int quantidadeClientes;
+    private int quantidadeMotocicletasAtendidas;
+    private double ticketMedio;
+    
     public FechamentoDia() {
     }
     
@@ -33,6 +40,32 @@ public class FechamentoDia {
         this.totalPix = totalPix;
         this.lucroBruto = lucroBruto;
         this.totalServicos = totalServicos;
+        
+        // Inicializa campos específicos da oficina
+        this.totalMaoDeObra = 0.0;
+        this.totalPecas = 0.0;
+        this.quantidadeClientes = 0;
+        this.quantidadeMotocicletasAtendidas = 0;
+        this.ticketMedio = 0.0;
+    }
+    
+    public FechamentoDia(Date dataFechamento, double totalVendas, double totalDinheiro, 
+                        double totalDebito, double totalCredito, double totalPix, 
+                        double lucroBruto, int totalServicos, double totalMaoDeObra,
+                        double totalPecas, int quantidadeClientes, int quantidadeMotocicletasAtendidas) {
+        this.dataFechamento = dataFechamento;
+        this.totalVendas = totalVendas;
+        this.totalDinheiro = totalDinheiro;
+        this.totalDebito = totalDebito;
+        this.totalCredito = totalCredito;
+        this.totalPix = totalPix;
+        this.lucroBruto = lucroBruto;
+        this.totalServicos = totalServicos;
+        this.totalMaoDeObra = totalMaoDeObra;
+        this.totalPecas = totalPecas;
+        this.quantidadeClientes = quantidadeClientes;
+        this.quantidadeMotocicletasAtendidas = quantidadeMotocicletasAtendidas;
+        this.ticketMedio = quantidadeClientes > 0 ? totalVendas / quantidadeClientes : 0.0;
     }
 
     // Getters e Setters
@@ -112,6 +145,49 @@ public class FechamentoDia {
         return totalDinheiro + totalDebito + totalCredito + totalPix;
     }
 
+    // Getters e Setters para campos específicos da oficina
+    public double getTotalMaoDeObra() {
+        return totalMaoDeObra;
+    }
+
+    public void setTotalMaoDeObra(double totalMaoDeObra) {
+        this.totalMaoDeObra = totalMaoDeObra;
+    }
+
+    public double getTotalPecas() {
+        return totalPecas;
+    }
+
+    public void setTotalPecas(double totalPecas) {
+        this.totalPecas = totalPecas;
+    }
+
+    public int getQuantidadeClientes() {
+        return quantidadeClientes;
+    }
+
+    public void setQuantidadeClientes(int quantidadeClientes) {
+        this.quantidadeClientes = quantidadeClientes;
+        // Recalcula o ticket médio automaticamente
+        this.ticketMedio = quantidadeClientes > 0 ? totalVendas / quantidadeClientes : 0.0;
+    }
+
+    public int getQuantidadeMotocicletasAtendidas() {
+        return quantidadeMotocicletasAtendidas;
+    }
+
+    public void setQuantidadeMotocicletasAtendidas(int quantidadeMotocicletasAtendidas) {
+        this.quantidadeMotocicletasAtendidas = quantidadeMotocicletasAtendidas;
+    }
+
+    public double getTicketMedio() {
+        return ticketMedio;
+    }
+
+    public void setTicketMedio(double ticketMedio) {
+        this.ticketMedio = ticketMedio;
+    }
+
     @Override
     public String toString() {
         return "FechamentoDia{" +
@@ -124,6 +200,11 @@ public class FechamentoDia {
                 ", totalPix=" + totalPix +
                 ", lucroBruto=" + lucroBruto +
                 ", totalServicos=" + totalServicos +
+                ", totalMaoDeObra=" + totalMaoDeObra +
+                ", totalPecas=" + totalPecas +
+                ", quantidadeClientes=" + quantidadeClientes +
+                ", quantidadeMotocicletasAtendidas=" + quantidadeMotocicletasAtendidas +
+                ", ticketMedio=" + ticketMedio +
                 '}';
     }
 }

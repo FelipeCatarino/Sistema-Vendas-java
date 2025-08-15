@@ -1,6 +1,5 @@
 package com.sistemaMaster.gui.controller;
 
-import com.sistemaMaster.gui.DesktopPaneComImagem;
 import com.sistemaMaster.gui.CadastroProduto;
 import com.sistemaMaster.gui.CadastroCliente;
 import com.sistemaMaster.gui.CadastroFornecedor;
@@ -21,6 +20,7 @@ public class MenuController {
 
     private JDesktopPane desktopPane;
     private JFrame menuFrame;
+    private CadastroCliente cadastroClienteInstance = null;
 
     public MenuController(JDesktopPane desktopPane, JFrame menuFrame) {
         this.desktopPane = desktopPane;
@@ -34,9 +34,31 @@ public class MenuController {
     }
 
     public void miClienteActionPerformed(ActionEvent evt) {
-        CadastroCliente c = new CadastroCliente();
-        desktopPane.add(c);
-        c.setVisible(true);
+        // Verifica se já existe uma instância da tela de cadastro de cliente
+        if (cadastroClienteInstance != null && !cadastroClienteInstance.isClosed()) {
+            // Se existe e não está fechada, apenas traz ela para frente
+            try {
+                cadastroClienteInstance.setSelected(true);
+                cadastroClienteInstance.toFront();
+            } catch (Exception e) {
+                // Se houver erro ao trazer para frente, cria uma nova instância
+                criarNovaInstanciaCliente();
+            }
+        } else {
+            // Se não existe ou está fechada, cria uma nova instância
+            criarNovaInstanciaCliente();
+        }
+    }
+
+    private void criarNovaInstanciaCliente() {
+        cadastroClienteInstance = new CadastroCliente();
+        desktopPane.add(cadastroClienteInstance);
+        cadastroClienteInstance.setVisible(true);
+        try {
+            cadastroClienteInstance.setSelected(true);
+        } catch (Exception e) {
+            // Ignora erro se não conseguir selecionar
+        }
     }
 
     public void miFornecedorActionPerformed(ActionEvent evt) {

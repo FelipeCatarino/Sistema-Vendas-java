@@ -11,9 +11,15 @@ import javax.swing.UIManager;
 
 
 /**
- * Classe principal que inicia a aplicação
+ * Classe principal que inicia a aplicação - Sistema de Vendas para Oficina Mecânica
+ * 
+ * Sistema completo de gerenciamento com funcionalidades de vendas, estoque,
+ * cadastros, relatórios e fechamento de caixa.
  *
- * @author Juliano
+ * @author Felipe da Costa Catarino - Desenvolvimento e implementação completa
+ * @author Juliano Denner da Rocha - Estrutura base original
+ * @version 2.0
+ * @since 2025
  */
 public class Principal {
 

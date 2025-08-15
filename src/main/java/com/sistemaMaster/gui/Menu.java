@@ -4,9 +4,15 @@ import com.sistemaMaster.gui.DesktopPaneComImagem;
 import com.sistemaMaster.gui.controller.MenuController;
 
 /**
- * Janela menu da aplicação
- *
- * @author Juliano
+ * Janela menu principal da aplicação - Sistema de Vendas para Oficina Mecânica
+ * 
+ * Interface gráfica principal que fornece acesso a todas as funcionalidades do sistema:
+ * vendas, estoque, cadastros, relatórios e fechamento de caixa.
+ * 
+ * @author Felipe da Costa Catarino - Desenvolvimento completo e implementação
+ * @author Juliano Denner da Rocha - Interface gráfica base original
+ * @version 2.0
+ * @since 2025
  */
 public class Menu extends javax.swing.JFrame {
 

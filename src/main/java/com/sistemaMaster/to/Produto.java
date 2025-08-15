@@ -1,9 +1,13 @@
 package com.sistemaMaster.to;
 
 /**
- * Classe contendo os dados do produto
+ * Classe contendo os dados do produto - Transfer Object
+ * 
+ * Representa a entidade Produto com todos os atributos necessários
+ * para controle de estoque e vendas da oficina mecânica.
  *
- * @author Juliano
+ * @author Felipe da Costa Catarino - Implementação completa e melhorias
+ * @author Juliano Denner da Rocha - Estrutura base original
  */
 public class Produto {
 

@@ -45,8 +45,12 @@ public class iniciaBanco {
                     "CREATE TABLE IF NOT EXISTS TBCLIENTE ("
                             + "Codigo INTEGER PRIMARY KEY AUTOINCREMENT, "
                             + "Nome TEXT NOT NULL, "
-                            + "CPF TEXT NOT NULL, "
-                            + "DataNascimento DATE NOT NULL"
+                            + "Telefone TEXT, "
+                            + "Placa TEXT, "
+                            + "ModeloMoto TEXT, "
+                            + "DataCadastro DATE, "
+                            + "QuilometragemAtual INTEGER DEFAULT 0, "
+                            + "Observacao TEXT"
                             + ");",
 
                     "CREATE TABLE IF NOT EXISTS TBFORNECEDOR ("

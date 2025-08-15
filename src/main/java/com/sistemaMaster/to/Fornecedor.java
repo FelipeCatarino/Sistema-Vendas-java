@@ -1,9 +1,13 @@
 package com.sistemaMaster.to;
 
 /**
- * Classe contendo os dados do fornecedor
+ * Classe contendo os dados do fornecedor - Transfer Object
+ * 
+ * Representa a entidade Fornecedor com todos os atributos necessários
+ * para controle de compras e relacionamento comercial.
  *
- * @author Juliano
+ * @author Felipe da Costa Catarino - Implementação completa e melhorias
+ * @author Juliano Denner da Rocha - Estrutura base original
  */
 public class Fornecedor {
 

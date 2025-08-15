@@ -89,9 +89,9 @@ public class Venda {
     public Double getValorTotal() {
         double total = 0;
         for (ItemVenda iv : itens) {
-            total += (iv.getValorUnitario() * iv.getQuantidade() + getMaoDeObra());
+            total += (iv.getValorUnitario() * iv.getQuantidade());
         }
-        return total;
+        return total; // Retorna apenas o total dos produtos
     }
 
     public Situacao getSituacao() {
