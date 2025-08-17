@@ -28,6 +28,7 @@ public class Menu extends javax.swing.JFrame {
         
         toolBar = new javax.swing.JToolBar();
         btVenda = new javax.swing.JButton();
+        btOrcamento = new javax.swing.JButton();
         btOrdemServico = new javax.swing.JButton();
         btEstoque = new javax.swing.JButton();
         btCliente = new javax.swing.JButton();
@@ -74,6 +75,23 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         toolBar.add(btVenda);
+
+        btOrcamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/orcamento.png")));
+        btOrcamento.setText("Orçamento");
+        btOrcamento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btOrcamento.setFocusable(false);
+        btOrcamento.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btOrcamento.setMargin(new java.awt.Insets(2, 12, 2, 12));
+        btOrcamento.setRolloverIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/orcamento-foco.png")));
+        btOrcamento.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        btOrcamento.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btOrcamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                controller.miOrcamentoActionPerformed(evt);
+            }
+        });
+        toolBar.add(btOrcamento);
 
         btOrdemServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/sistemaMaster/gui/img/ordem.png"))); // NOI18N
         btOrdemServico.setText("OS");
@@ -291,7 +309,7 @@ public class Menu extends javax.swing.JFrame {
 
         setJMenuBar(menuBar);
 
-        setSize(new java.awt.Dimension(900, 700));
+        setSize(new java.awt.Dimension(1000, 700));
         setLocationRelativeTo(null);
     }
 
@@ -305,6 +323,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton btFiado;
     private javax.swing.JButton btFornecedor;
     private javax.swing.JButton btOrdemServico;
+    private javax.swing.JButton btOrcamento;
 
     private javax.swing.JButton btSair;
     private javax.swing.JButton btVenda;

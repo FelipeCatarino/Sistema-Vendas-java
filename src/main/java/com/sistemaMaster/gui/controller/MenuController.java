@@ -1,20 +1,22 @@
 package com.sistemaMaster.gui.controller;
 
-import com.sistemaMaster.gui.CadastroProduto;
-import com.sistemaMaster.gui.CadastroCliente;
-import com.sistemaMaster.gui.CadastroFornecedor;
-import com.sistemaMaster.gui.LancamentoVenda;
-import com.sistemaMaster.gui.LancamentoCompra;
-import com.sistemaMaster.gui.Sobre;
-import com.sistemaMaster.gui.OrdemServico;
-import com.sistemaMaster.gui.Estoque;
-import com.sistemaMaster.gui.Dashboard;
-import com.sistemaMaster.gui.CadernoFiado;
-import com.sistemaMaster.gui.Fechamento;
-
 import java.awt.event.ActionEvent;
+
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+
+import com.sistemaMaster.gui.CadastroCliente;
+import com.sistemaMaster.gui.CadastroFornecedor;
+import com.sistemaMaster.gui.CadastroProduto;
+import com.sistemaMaster.gui.CadernoFiado;
+import com.sistemaMaster.gui.Dashboard;
+import com.sistemaMaster.gui.Estoque;
+import com.sistemaMaster.gui.Fechamento;
+import com.sistemaMaster.gui.LancamentoCompra;
+import com.sistemaMaster.gui.LancamentoVenda;
+import com.sistemaMaster.gui.Orcamento;
+import com.sistemaMaster.gui.OrdemServicoForm;
+import com.sistemaMaster.gui.Sobre;
 
 public class MenuController {
 
@@ -73,6 +75,12 @@ public class MenuController {
         v.setVisible(true);
     }
 
+    public void miOrcamentoActionPerformed(ActionEvent evt) {
+        Orcamento o = new Orcamento();
+        desktopPane.add(o);
+        o.setVisible(true);
+    }
+
     public void miCompraActionPerformed(ActionEvent evt) {
         LancamentoCompra c = new LancamentoCompra();
         desktopPane.add(c);
@@ -89,7 +97,7 @@ public class MenuController {
     }
 
     public void btOrdemServicoActionPerformed(ActionEvent evt) {
-        OrdemServico ordemServico = new OrdemServico();
+        OrdemServicoForm ordemServico = OrdemServicoForm.getInstance();
         desktopPane.add(ordemServico);
         ordemServico.setVisible(true);
     }

@@ -1,14 +1,13 @@
 package com.sistemaMaster.dao;
 
-import com.sistemaMaster.to.FechamentoDia;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sistemaMaster.dao.Conexao;
+import com.sistemaMaster.to.FechamentoDia;
 
 /**
  * Classe de acesso a dados do fechamento

@@ -111,6 +111,27 @@ public class iniciaBanco {
                             + "ValorUnitario REAL NOT NULL, "
                             + "FOREIGN KEY (CodigoProduto) REFERENCES TBPRODUTO (Codigo), "
                             + "FOREIGN KEY (CodigoCompra) REFERENCES TBCOMPRA (Codigo)"
+                            + ");",
+
+                    "CREATE TABLE IF NOT EXISTS TBORDEMSERVICO ("
+                            + "Codigo INTEGER PRIMARY KEY AUTOINCREMENT, "
+                            + "CodigoCliente INTEGER NOT NULL, "
+                            + "PlacaVeiculo TEXT, "
+                            + "ModeloVeiculo TEXT, "
+                            + "DescricaoProblema TEXT NOT NULL, "
+                            + "DescricaoServico TEXT, "
+                            + "Observacoes TEXT, "
+                            + "DataAbertura DATE NOT NULL, "
+                            + "DataPrevisaoEntrega DATE, "
+                            + "DataEntrega DATE, "
+                            + "Status TEXT NOT NULL DEFAULT 'ABERTA', "
+                            + "Prioridade TEXT NOT NULL DEFAULT 'NORMAL', "
+                            + "ValorMaoObra REAL DEFAULT 0, "
+                            + "ValorPecas REAL DEFAULT 0, "
+                            + "ValorTotal REAL DEFAULT 0, "
+                            + "TecnicoResponsavel TEXT, "
+                            + "QuilometragemVeiculo INTEGER DEFAULT 0, "
+                            + "FOREIGN KEY (CodigoCliente) REFERENCES TBCLIENTE (Codigo)"
                             + ");"
             };
 
