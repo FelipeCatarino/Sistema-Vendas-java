@@ -3,7 +3,11 @@ package com.sistemaMaster.gui.controller;
 import com.sistemaMaster.gui.Orcamento;
 
 public class OrcamentoController {
-    public OrcamentoController(Orcamento orcamento, OrcamentoController orcamentoController){
 
+    private Orcamento view;
+
+    public OrcamentoController(Orcamento view){
+        this.view = view;
+        
     }
 }
